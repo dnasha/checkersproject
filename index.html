@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>checkers.com</title>
+		<link href="./main/game.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body id="everything">
+		<div id="content">
+			
+		<div id="title">Checkers</div>
+
+		<div id="timerBlack" class="timer">5:00</div>
+		
+		<div id="board">
+		
+		<div class="white_square tile" id="round1"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile" id="round2"></div>
+
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+
+		<div class="black_square tile" id="round3"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile"></div>
+		<div class="black_square tile"></div>
+		<div class="white_square tile" id="round4"></div>
+
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+		<div class="white_checker checker"></div>
+
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+		<div class="black_checker checker"></div>
+
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		<div class="indicator"></div>
+		
+		</div>
+		<div id="timerWhite" class="timer">5:00</div>
+		<div id="turn">
+			Whites turn...
+		</div>
+			
+		<button id="undo" hidden>undo</button>
+		<button id="redo" hidden>redo</button>
+			
+		<button id="reset">New Game</button>
+		<br>
+		<input type="checkbox" id="forcedLaw" name="forced" checked>
+		<label for="forced" > Forced Moves?</label>
+		<input type="checkbox" id="botMode" name="botMode" hidden>
+		<label for="botMode" hidden > VS AI (Not Functional Yet)</label><br>
+		</div> 
+		<audio id="startAUD" src="./audio/start.wav" type="audio/wav"></audio>
+		<audio id="moveAUD" src="./audio/move.wav" type="audio/wav"></audio>
+		<audio id="attackAUD" src="./audio/attack.wav" type="audio/wav"></audio>
+		<audio id="checkAUD" src="./audio/check.wav" type="audio/wav"></audio>
+		<audio id="winAUD" src="./audio/win.wav" type="audio/wav"></audio>
+		<script src="./new/game.js" type="module"></script>
+	</body>
+</html>
