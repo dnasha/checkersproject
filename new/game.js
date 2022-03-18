@@ -80,7 +80,15 @@ var forced = false;
 var ai;
 var bot = false;
 
+// timer
+var whiteSeconds = 60;
+var blackSeconds = 60;
+	
+var timerWhite = document.getElementById("timerWhite");
+var timerBlack = document.getElementById("timerBlack");
 
+var whitePause = false;
+var blackPause = false;
 // ***************setup functions***************
 
 // setup
@@ -232,6 +240,7 @@ function clicked(checker) {
 // activates a piece visually
 function activatePiece(checker) {
 	if (!started) {
+		timer(true);
 		sound.startS();
 		started = true;
 	}
@@ -463,15 +472,28 @@ function turnSwitch() {
 	if (moveCount >= 20) {
 		checkWin();
 	}
-
-	if (!forced) {
-		turn = !turn;
+	if (!gameOver) {
+		
+		if (!forced) {
+			turn = !turn;
+		}
+		
+		if (forcedLaw.checked) {
+			forcedAttack();
+		}
+		
+		if (turn) {
+			whitePause = false;
+			blackPause = true;
+			blackSeconds += 3;
+		} else {
+			whitePause = true;
+			blackPause = false;
+			whiteSeconds += 3;
+		}
+		
+		timer(turn);
 	}
-	
-	if (forcedLaw.checked) {
-		forcedAttack();
-	}
-	
 	//console.log(forced);
 	//console.log(forcedMoves);
 	
@@ -718,7 +740,9 @@ function checkWin() {
 }
 
 function stopGame() {
-
+	whitePause = true;
+	blackPause = true;
+	
 	turnText.style.visibility = "hidden";
 
 	if (winner === "w") {
@@ -786,6 +810,16 @@ function resetGame() {
 	}
 	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn);
+	
+	whiteSeconds = 60;
+	blackSeconds = 60;
+	whitePause = false;
+	blackPause = false;
+
+	timerWhite.innerHTML = "?";
+	timerBlack.innerHTML = "?";
+	timerWhite.style.color = "white";
+	timerBlack.style.color = "white";
 	
 	resetButton.style.visibility = "hidden";
 
@@ -895,3 +929,95 @@ function loadPos() {
 	}
 }
 */
+
+function timer(turn) {
+	
+	var interval = 1000;
+	var expected = Date.now() + interval;
+	var paused = false;
+	
+//https://stackoverflow.com/questions/29971898/how-to-create-an-accurate-timer-in-javascript
+	if (turn) {
+		setTimeout(whiteStep, interval);
+	} else {
+		setTimeout(blackStep, interval);
+	}
+	
+
+	function whiteStep() {
+		var drift = Date.now() - expected;
+
+		whiteSeconds --;
+
+		if (whiteSeconds < 10) {
+			timerWhite.style.color = "red";
+		} else if (whiteSeconds > 10 && timerWhite.style.color === "red") {
+			timerWhite.style.color = "white";
+		}
+		var mins = Math.floor(whiteSeconds / 60);
+		var secs = Math.round(whiteSeconds % 60);
+		
+		var output = mins + ":";
+
+		if (secs < 10) {
+			output += "0";
+		}
+		
+		output += secs;
+		
+		console.log(output);
+		
+		timerWhite.innerHTML = output;
+		expected += interval;
+
+		if (whiteSeconds == 0) {
+			whitePause = true;
+			winner = "b";
+		    gameOver = true;
+			sound.winS();
+			stopGame();
+		}
+		if (!whitePause) {
+    		setTimeout(whiteStep, Math.max(0, interval - drift));
+		}
+	}
+	
+	function blackStep() {
+		var drift = Date.now() - expected;
+
+		blackSeconds --;
+		
+		if (blackSeconds < 10) {
+			timerBlack.style.color = "red";
+		} else if (blackSeconds > 10 && timerBlack.style.color === "red") {
+			timerBlack.style.color = "white";
+		}
+		
+		var mins = Math.floor(blackSeconds / 60);
+		var secs = Math.round(blackSeconds % 60);
+		
+		var output = mins + ":";
+
+		if (secs < 10) {
+			output += "0";
+		}
+		
+		output += secs;
+		
+		timerBlack.innerHTML = output;
+		expected += interval;
+
+		if (blackSeconds == 0) {
+			blackPause = true;
+			winner = "w";
+		    gameOver = true;
+			sound.winS();
+			stopGame();
+		}
+		
+		if (!blackPause) {
+    		setTimeout(blackStep, Math.max(0, interval - drift));
+		}
+	}
+}
+export {timer}
