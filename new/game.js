@@ -83,7 +83,9 @@ var bot = false;
 // timer
 var whiteSeconds = 60;
 var blackSeconds = 60;
-	
+//var whiteSeconds = 31536003;
+//var blackSeconds = 31536003;
+
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
 
@@ -130,7 +132,7 @@ window.onload = function start() {
 
 	ai = new AI(basePosition);
 	//prevMoves.push(basePosition);
-	console.log(basePosition.toString());
+	//console.log(basePosition.toString());
 }
 
 // fills arrays of pieces with checker objects
@@ -426,7 +428,7 @@ function move(newCords) {
 		crowned = piece.king;
 	}
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn);
-	console.log(basePosition.toString());
+	//console.log(basePosition.toString());
 
 	if (forcedLaw.checked && forced) {
 
@@ -483,10 +485,14 @@ function turnSwitch() {
 		}
 		
 		if (turn) {
+			timerBlack.style.opacity = .4;
+			timerWhite.style.opacity = 1;
 			whitePause = false;
 			blackPause = true;
 			blackSeconds += 3;
 		} else {
+			timerBlack.style.opacity = 1;
+			timerWhite.style.opacity = .4;
 			whitePause = true;
 			blackPause = false;
 			whiteSeconds += 3;
@@ -498,7 +504,7 @@ function turnSwitch() {
 	//console.log(forcedMoves);
 	
 	//prevMoves.push(basePosition);
-	
+	/*
 	if (turn) {
 		turnText.innerHTML = "Whites turn...";
 		turnText.style.color = "white";
@@ -511,7 +517,7 @@ function turnSwitch() {
 		turnText.style.webkitTextStrokeWidth = "1px";
 		turnText.style.webkitTextStrokeColor  = "white";
 	}
-
+	*/
 	if (!turn && bot) {
 		aiMove();
 	}
@@ -756,11 +762,15 @@ function stopGame() {
 
 function resetGame() {
 	
+	resetHeld();
+	
+	/*
 	turnText.innerHTML = "Whites turn...";
 	turnText.style.color = "white";
 	turnText.style.webkitTextStrokeColor = "black";
 	turnText.style.visibility = "visible";
-
+	*/
+	
 	turn = true;
 	held = null;
 	wcs.length = 0;
@@ -818,8 +828,10 @@ function resetGame() {
 
 	timerWhite.innerHTML = "?";
 	timerBlack.innerHTML = "?";
-	timerWhite.style.color = "white";
+	timerWhite.style.color = "black";
 	timerBlack.style.color = "white";
+	timerWhite.style.opacity = 1;
+	timerBlack.style.opacity = 1;
 	
 	resetButton.style.visibility = "hidden";
 
@@ -952,25 +964,50 @@ function timer(turn) {
 		if (whiteSeconds < 10) {
 			timerWhite.style.color = "red";
 		} else if (whiteSeconds > 10 && timerWhite.style.color === "red") {
-			timerWhite.style.color = "white";
+			timerWhite.style.color = "black";
 		}
+		
 		var mins = Math.floor(whiteSeconds / 60);
+		var hours = Math.floor(mins/60);
+		var days = Math.floor(hours/24);
+		var years = Math.floor(days/365);
+		
 		var secs = Math.round(whiteSeconds % 60);
 		
-		var output = mins + ":";
+		var output = "";
 
+		if (years > 0) {
+			output += years + ";";
+		} 
+		if (days % 365 > 0) {
+			output += days % 365 + ":";
+		} 
+		if (hours % 24 > 0) {
+			output += hours % 24 + ":";
+		}
+		if (mins % 60 > 0) {
+			output += mins % 60 + ":";
+		} else {
+			output += 0 + ":";
+		}
+		
+		
 		if (secs < 10) {
 			output += "0";
 		}
 		
 		output += secs;
 		
-		console.log(output);
+		var size = output.length;
+		size -= 4;
+		size = size * 15 + 80;
+		timerWhite.style.width = size + "px"; 
+		timerWhite.style.marginLeft = 640 - size + "px";
 		
 		timerWhite.innerHTML = output;
 		expected += interval;
 
-		if (whiteSeconds == 0) {
+		if (whiteSeconds === 0) {
 			whitePause = true;
 			winner = "b";
 		    gameOver = true;
@@ -994,20 +1031,45 @@ function timer(turn) {
 		}
 		
 		var mins = Math.floor(blackSeconds / 60);
+		var hours = Math.floor(mins/60);
+		var days = Math.floor(hours/24);
+		var years = Math.floor(days/365);
+		
 		var secs = Math.round(blackSeconds % 60);
 		
-		var output = mins + ":";
+		var output = "";
 
+		if (years > 0) {
+			output += years + ";";
+		} 
+		if (days % 365 > 0) {
+			output += days % 365 + ":";
+		} 
+		if (hours % 24 > 0) {
+			output += hours % 24 + ":";
+		}
+		if (mins % 60 > 0) {
+			output += mins % 60 + ":";
+		} else {
+			output += 0 + ":";
+		}
+		
 		if (secs < 10) {
 			output += "0";
 		}
 		
 		output += secs;
-		
+
+		var size = output.length;
+		size -= 4;
+		size = size * 15 + 80;
+		timerBlack.style.width = size + "px"; 
+		timerBlack.style.marginLeft = 640 - size + "px";
+			
 		timerBlack.innerHTML = output;
 		expected += interval;
 
-		if (blackSeconds == 0) {
+		if (blackSeconds === 0) {
 			blackPause = true;
 			winner = "w";
 		    gameOver = true;

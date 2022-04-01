@@ -88,10 +88,11 @@ body {
 #title {
 	font-family: Brush Script MT, Brush Script Std, cursive;
 	font-size: 100px;
-
+	
 	color:rgb(235, 236, 208);
 	text-shadow: 5px 5px 3px rgb(72, 46, 39);
-
+	
+	margin-bottom: 15px;
 	text-align: center;
 }
 
@@ -126,4 +127,24 @@ body {
 
 label {
 	color: white;
+}
+
+#timerBlack {
+	margin-left: 560px;
+	margin-bottom: 10px;
+	text-align: center;
+	width: 80px;
+	color: white;
+	background-color: black;
+	border-radius: 5px;
+}
+
+#timerWhite {
+	margin-left: 560px;
+	margin-top: 10px;
+	text-align: center;
+	width: 80px;
+	color: black;
+	background-color: white;
+	border-radius: 5px;
 }
