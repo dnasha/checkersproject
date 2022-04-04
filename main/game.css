@@ -130,8 +130,7 @@ label {
 }
 
 #timerBlack {
-	margin-left: 560px;
-	margin-bottom: 10px;
+	//margin-left: 560px;
 	text-align: center;
 	width: 80px;
 	color: white;
@@ -140,11 +139,55 @@ label {
 }
 
 #timerWhite {
-	margin-left: 560px;
-	margin-top: 10px;
+	//margin-left: 560px;
 	text-align: center;
 	width: 80px;
 	color: black;
 	background-color: white;
 	border-radius: 5px;
+}
+
+.whiteMini {
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	visibility: hidden;
+	background-color: rgb(252, 251, 251);
+	border: 2px solid black;
+}
+
+.blackMini {
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	visibility: hidden;
+	background-color: rgb(1, 11, 2);
+	border: 2px solid white;
+}
+
+
+#blackTaken {
+	margin-top: 8px;
+	display: flex;
+	flex-direction: row;
+}
+
+#whiteTaken {
+	margin-top: 8px;
+	display: flex;
+	flex-direction: row;
+}
+
+#topRow {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;	
+	margin-bottom: 10px;
+}
+
+#botRow {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;	
+	margin-top: 10px;
 }

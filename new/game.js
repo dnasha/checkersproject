@@ -4,6 +4,7 @@ import {Checker} from "./checker.js";
 import {Move} from "./move.js";
 import {AI} from "./AI.js";
 import {checkerSound} from "./checkerSound.js";
+import {PieceTracker} from "./pieceTracker.js";
 
 // Developed by Dan Sharan
 
@@ -23,6 +24,12 @@ var wTiles = document.getElementsByClassName("white_square");
 var wCheckers = document.getElementsByClassName("white_checker");
 var bCheckers = document.getElementsByClassName("black_checker");
 var checkers = document.getElementsByClassName("checker");
+
+var blackTaken = document.getElementsByClassName("whiteMini");
+var whiteTaken = document.getElementsByClassName("blackMini");
+
+var bTk = new PieceTracker(blackTaken);
+var wTk = new PieceTracker(whiteTaken);
 
 // piece counts
 var wPieceCount = wCheckers.length;
@@ -129,7 +136,7 @@ window.onload = function start() {
 	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn);
 
-
+	
 	ai = new AI(basePosition);
 	//prevMoves.push(basePosition);
 	//console.log(basePosition.toString());
@@ -412,6 +419,11 @@ function move(newCords) {
 	piece.source.style.top = (newY * 80) + "px";
 
 	if (attackPlayed) {
+		if (turn) {
+			wTk.show();
+		} else {
+			bTk.show();
+		}
 		sound.attackS();
 	} else {
 		sound.moveS();
@@ -826,6 +838,9 @@ function resetGame() {
 	whitePause = false;
 	blackPause = false;
 
+	wTk.reset();
+	bTk.reset();
+	
 	timerWhite.innerHTML = "?";
 	timerBlack.innerHTML = "?";
 	timerWhite.style.color = "black";
@@ -834,7 +849,6 @@ function resetGame() {
 	timerBlack.style.opacity = 1;
 	
 	resetButton.style.visibility = "hidden";
-
 }
 
 function allMovesPossible(side) {
@@ -1002,7 +1016,7 @@ function timer(turn) {
 		size -= 4;
 		size = size * 15 + 80;
 		timerWhite.style.width = size + "px"; 
-		timerWhite.style.marginLeft = 640 - size + "px";
+		//timerWhite.style.marginLeft = 640 - size + "px";
 		
 		timerWhite.innerHTML = output;
 		expected += interval;
@@ -1064,7 +1078,7 @@ function timer(turn) {
 		size -= 4;
 		size = size * 15 + 80;
 		timerBlack.style.width = size + "px"; 
-		timerBlack.style.marginLeft = 640 - size + "px";
+		//timerBlack.style.marginLeft = 640 - size + "px";
 			
 		timerBlack.innerHTML = output;
 		expected += interval;
