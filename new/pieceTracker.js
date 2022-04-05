@@ -7,7 +7,7 @@ class PieceTracker {
 		var temp = this.pieces;
 
 		var i = 0;
-		while (temp.item(i).style.visibility === "visible") {
+		while (temp.item(i).style.visibility === "visible" && i < temp.length) {
 			i ++;
 		}
 
@@ -17,7 +17,7 @@ class PieceTracker {
 	reset() {
 		var temp = this.pieces;
 
-		for (let i = 0; i < temp.size; i ++) {
+		for (let i = 0; i < temp.length; i ++) {
 			temp.item(i).style.visibility = "hidden";
 		}
 	}
