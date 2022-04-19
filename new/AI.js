@@ -12,8 +12,13 @@ class AI {
 		var start = Date.now();
 		
 		//var score = [-Infinity, this.position]; 
-		var positions = this.getPositions(this.position);
+		//var positions = this.getPositions(this.position);
 
+		var npos = this.position.copy();
+
+		console.log("Original \n" + this.position.toString() + "\n");
+		
+		console.log("Copy \n" + npos.toString());
 		/*
 		for (let i = 0; i < positions.length; i ++) {
 			var temp = minMax(positions[i], true, 2, -Infinity, Infinity);
@@ -36,12 +41,12 @@ class AI {
 		//var type = best.lastMove.type;
 		//var cords = best.lastMove.cords;
 		//var optimalMove = new Move(piece, cords, type);
+		var optimalMove = null;
+		return optimalMove;
 
-		//return optimalMove;
-
-		for (let i = 0; i < positions.length; i ++) {
-			console.log(positions[i].toString);
-		}
+		//for (let i = 0; i < positions.length; i ++) {
+		//	console.log(positions[i].toString());
+		//}
 	}
 	
 	update(newPos) {
@@ -68,7 +73,7 @@ class AI {
 	
 	minMax(position, player, depth, alpha, beta) {
 	
-		if (depth == 0 || position.gameOver) {
+		if (depth == 0 /*|| position.gameOver*/) {
 			return evaluate(position);
 		}
 	

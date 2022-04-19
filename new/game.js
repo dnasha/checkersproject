@@ -5,7 +5,7 @@ import {Move} from "./move.js";
 import {AI} from "./AI.js";
 import {checkerSound} from "./checkerSound.js";
 import {PieceTracker} from "./pieceTracker.js";
-
+//import _ from "./lodash/lodash.js";
 // Developed by Dan Sharan
 
 // ***************global vars***************
@@ -210,12 +210,12 @@ function clickListeners() {
 
 // adds click listeners to black pieces
 function clickListenersBlack() {
-	if (!bot) {
+	//if (!bot) {
 		for (let i = 0; i < bPieceCount; i ++) {
 			var checker = bcs[i].source;
 			checker.addEventListener("click", function(){clicked(bcs[i]);});
 		}
-	}
+	//}
 	
 }
 
@@ -346,19 +346,19 @@ function aiMove() {
 	
 	var moveAI = ai.getMove();
 	
-	held = moveAI.piece;
-	var attack = moveAI.type;
-	var cords = moveAI.cords;
+	//held = moveAI.piece;
+	//var attack = moveAI.type;
+	//var cords = moveAI.cords;
 	
-	var tX = moveAI.cords[0];
-	var tY = moveAI.cords[1];
-	var pX = held.location[0];
-	var pY = held.location[1];
+	//var tX = moveAI.cords[0];
+	//var tY = moveAI.cords[1];
+	//var pX = held.location[0];
+	//var pY = held.location[1];
 	
 	if (attack) {
-		checkAttack(tX, tY, pX, pY, false)
+		//checkAttack(tX, tY, pX, pY, false)
 	} else {
-		move(cords);
+		//move(cords);
 	}
 }
 // checks if a move is valid
@@ -530,7 +530,7 @@ function turnSwitch() {
 		turnText.style.webkitTextStrokeColor  = "white";
 	}
 	*/
-	if (!turn && bot) {
+	if (!turn && bot && moveCount > 6) {
 		aiMove();
 	}
 	
@@ -1096,4 +1096,3 @@ function timer(turn) {
 		}
 	}
 }
-export {timer}

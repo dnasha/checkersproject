@@ -3,6 +3,7 @@
 |   |
 +---+
 */
+import {Checker} from "./checker.js";
 
 // computer representation of the position
 class Position {
@@ -43,8 +44,72 @@ class Position {
 
   		return textRep;
   	}
+
+	// deep copies the current self
+	
 	copy() {
-		return new Position(this.wcs, this.bcs, this.posBoard, this.wkc, this.bkc, this.wcc, this.bcc, this.moveCount, this.turn);
+		var tempWCS = this.wcs;
+		var tempBCS = this.bcs;
+		
+		var nwcs = [];
+
+		for (let i = 0; i < tempWCS.length; i ++) {
+			
+			let x = tempWCS[i].location[0];
+			let y = tempWCS[i].location[1];
+			
+			let king = tempWCS[i].king;
+			
+			let source = tempWCS[i].source;
+			
+			nwcs.push(new Checker([x, y], "W", source, king));
+		}
+		
+		var nbcs = [];
+
+		for (let i = 0; i < tempBCS.length; i ++) {
+			
+			let x = tempBCS[i].location[0];
+			let y = tempBCS[i].location[1];
+			
+			let king = tempBCS[i].king;
+			
+			let source = tempBCS[i].source;
+			
+			nbcs.push(new Checker([x, y], "B", source, king));
+		}
+		
+		var nposBoard = [];
+
+		var tempBoard = this.posBoard;
+		
+		for (let i = 0; i < tempBoard.length; i ++) {
+			nposBoard.push([]);
+			
+			for (let j = 0; j < tempBoard[i].length; j ++) {
+				var current = tempBoard[i][j];
+
+				if (current == null) {
+					nposBoard[i].push(null);
+				} else if (current.color == "W") {
+					nposBoard[i].push(nwcs[tempWCS.indexOf(current)]);
+				} else if (current.color == "B") {
+					nposBoard[i].push(nbcs[tempBCS.indexOf(current)]);
+				}
+				
+			}
+		}
+
+		
+		let nwkc = this.wkc;
+		let nbkc = this.bkc;
+		let nwcc = this.wcc;
+		let nbcc = this.bcc;
+		let nmoveCount = this.moveCount;
+		let nturn = this.turn;
+
+		
+		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn);
 	}
 }
 
