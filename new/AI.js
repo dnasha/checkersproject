@@ -8,80 +8,121 @@ class AI {
 	}
 	
 	getMove() {
-		
+		console.log(this.position.toString());
 		var start = Date.now();
 		
-		//var score = [-Infinity, this.position]; 
-		//var positions = this.getPositions(this.position);
-
-		var npos = this.position.copy();
-
-		console.log("Original \n" + this.position.toString() + "\n");
+		var score = [-Infinity, this.position]; 
 		
-		console.log("Copy \n" + npos.toString());
-		/*
-		for (let i = 0; i < positions.length; i ++) {
-			var temp = minMax(positions[i], true, 2, -Infinity, Infinity);
+		var positions = this.getPositions(this.position);
 
+		//var npos = this.position.copy();
+
+		//console.log("Original \n" + this.position.toString() + "\n");
+		
+		//console.log("Copy \n" + npos.toString());
+
+		//depth = input + 1
+		
+		for (let i = 0; i < positions.length; i ++) {
+			var temp = this.minMax(positions[i], true, 3, -Infinity, Infinity);
+			//var temp = this.evaluate(positions[i]);
+			
+			//console.log(temp);
+			
 			if (temp > score[0]) {
 				score[0] = temp;
 				score[1] = positions[i];
 			}
 			
 		}
-		*/
+		
+		
+		//console.log("passed2");
+		
 		var stats = this.stats;
+		
+		//var pick = Math.floor(Math.random() * positions.length);
 		
 		console.log("Positions Calculated: " + stats);
 		console.log("Time taken (s): " + (Date.now() - start)/1000);
 		
-		//var best = score[1].lastMove;
+		//score[1] = positions[pick];
 		
-		//var piece = best.lastMove.piece;
-		//var type = best.lastMove.type;
-		//var cords = best.lastMove.cords;
-		//var optimalMove = new Move(piece, cords, type);
-		var optimalMove = null;
-		return optimalMove;
-
+		let best = score[1];
+		
+		let piece = best.prevMove.piece;
+		let type = best.prevMove.type;
+		let cords = best.prevMove.cords;
+		let optimalMove = new Move(piece, cords, type);
+		
 		//for (let i = 0; i < positions.length; i ++) {
 		//	console.log(positions[i].toString());
 		//}
+		
+		return optimalMove;
 	}
 	
 	update(newPos) {
 		this.position = newPos;
 		this.stats = 0;
 	}
+
+	updatePosboard(position, move) {
+
+		var board = position.posBoard;
+		var piece = move.piece;
+		var cords = move.cords;
+		var type = move.type;
+		var px = piece.location[0];
+		var py = piece.location[1];
+		var mx = cords[0];
+		var my = cords[1];
+		
+		
+		board[py][px] = null;
+		
+		board[my][mx] = piece;
+		
+		if (type) {
+			board[(py + my) / 2][(px + mx) / 2].dead = true;
+			board[(py + my) / 2][(px + mx) / 2] = null;
+		} 
+
+		piece.cords = cords;
+	}
 	
 	evaluate(position) {
-		var wpc = position.wpc;
-		var bpc = position.bpc;
+		var wcc = position.wcc;
+		var bcc = position.bcc;
 		var wkc = position.wkc;
 		var bkc = position.bkc;
-	
-		if (position.gameOver) {
+		
+		/*
+		if (position.gameOver()) {
 			if (position.turn) {
 				return 1000;
 			} else {
 				return -1000;
 			}
 		}
+		*/
 		
-		return bpc - wpc + (bkc - wkc);
+		return bcc - wcc + (2 * (bkc - wkc));
 	}
 	
 	minMax(position, player, depth, alpha, beta) {
-	
+
+		this.stats ++;
+		
 		if (depth == 0 /*|| position.gameOver*/) {
-			return evaluate(position);
+			return this.evaluate(position);
 		}
 	
 		if (player) {
 			var maxEval = -Infinity;
 			var positions = this.getPositions(position);
 			for (let i = 0; i < positions.length; i ++ ) {
-				var ev = minMax(positions[i], player, depth - 1, alpha, beta);
+				var ev = this.minMax(positions[i], false, depth - 1, alpha, beta);
 				maxEval = Math.max(maxEval, ev);
 				alpha = Math.max(alpha, ev);
 				if (beta <= alpha) {
@@ -94,7 +135,7 @@ class AI {
 			var minEval = Infinity;
 			var positions = this.getPositions(position);
 			for (let i = 0; i < positions.length; i ++ ) {
-				var ev = minMax(positions[i], player, depth - 1, alpha, beta);
+				var ev = this.minMax(positions[i], true, depth - 1, alpha, beta);
 				minEval = Math.min(minEval, ev);
 				beta = Math.min(beta, ev);
 				if (beta <= alpha) {
@@ -108,13 +149,37 @@ class AI {
 
 	getPositions(position) {
 		var turn = position.turn;
-		var stats = this.stats;
+		var positions = [];
 		
+		var possibleMoves = allMovesPossible(turn);
+
+		
+		for (let i = 0; i < possibleMoves.length; i++) {
+			//console.log("passed0.1");
+
+			positions.push(position.copy());
+			
+			//console.log("passed0.2");
+			
+			var current = positions[i];
+			
+			//console.log("passed0.3");
+			
+			current.prevMove = possibleMoves[i];
+			this.updatePosboard(current, possibleMoves[i]);
+		
+			//console.log(possibleMoves[i]);
+		}
+
+		
+		
+		return positions;
+			 
 		function allMovesPossible(side) {
 			var wcs = position.wcs;
 			var bcs = position.bcs;
 			
-			var prevTurn = turn;
+			let prevTurn = turn;
 			var allMoves = [];
 			
 			if (side) {
@@ -150,8 +215,6 @@ class AI {
 			}
 			*/
 			
-			stats += allMoves.length;
-			
 			turn = prevTurn;
 	
 			return allMoves;
@@ -168,20 +231,20 @@ class AI {
 			var king = piece.king;
 
 			if (color === "W" || king) {
-				if (x+1 < 8 && y+1 < 8 && board[y+1][x+1] == null) {
-					moves.push(new Move(piece, [x+1, y+1], false));
+				if (x+1 < 8 && y+1 < 8 && board[y-1][x+1] == null) {
+					moves.push(new Move(piece, [x+1, y-1], false));
 				}
 
-				if (x-1 > -1 && y+1 < 8 && board[y+1][x-1] == null) {
-					moves.push(new Move(piece, [x-1, y+1], false));
+				if (x-1 > -1 && y+1 < 8 && board[y-1][x-1] == null) {
+					moves.push(new Move(piece, [x-1, y-1], false));
 				}
 
-				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+1][x+1] != null && board[y+1][x+1].color != piece.color) {
-					moves.push(new Move(piece, [x+1, y+1], false));
+				if (x+2 < 8 && y+2 < 8 && board[y-2][x-2] == null && board[y-2][x-2] != null && board[y-2][x-2].color != piece.color) {
+					moves.push(new Move(piece, [x-2, y-2], false));
 				}
 
-				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+1][x+1] != null && board[y+1][x-1].color != piece.color) {
-					moves.push(new Move(piece, [x-1, y+1], false));
+				if (x-2 > -1 && y+2 < 8 && board[y-2][x+2] == null && board[y-2][x+2] != null && board[y-2][x+2].color != piece.color) {
+					moves.push(new Move(piece, [x+2, y-2], false));
 				}
 				
 			}
@@ -195,24 +258,17 @@ class AI {
 					moves.push(new Move(piece, [x-1, y+1], false));
 				}
 
-				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+1][x+1] != null && board[y+1][x+1].color != piece.color) {
-					moves.push(new Move(piece, [x+1, y+1], false));
+				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+2][x+2] != null && board[y+2][x+2].color != piece.color) {
+					moves.push(new Move(piece, [x+2, y+2], false));
 				}
 
-				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+1][x+1] != null && board[y+1][x-1].color != piece.color) {
-					moves.push(new Move(piece, [x-1, y+1], false));
+				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+2][x-2] != null && board[y+2][x-2].color != piece.color) {
+					moves.push(new Move(piece, [x-2, y+2], false));
 				}
-			}
-
-			if (x+1 != 8 && y+1 != 8 && board[y+1][x+1] == null) {
-				moves.push(new Move(piece, [x+1, y+1], false));
 			}
 			
-
 			return moves;
 		}
-		
-		var possibleMoves = allMovesPossible();
 		
 	}
 

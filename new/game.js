@@ -57,6 +57,7 @@ var turn = true;
 
 var started = false;
 
+var prevMove = null;
 // arrays of checker objects
 var wcs = [];
 var bcs = [];
@@ -85,7 +86,7 @@ var forced = false;
 
 // ai
 var ai;
-var bot = false;
+var bot = true;
 
 // timer
 var whiteSeconds = 60;
@@ -134,7 +135,7 @@ window.onload = function start() {
 	[wcs[8], null, wcs[9], null, wcs[10], null, wcs[11], null]
 	];
 	
-	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn);
+	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
 
 	
 	ai = new AI(basePosition);
@@ -323,12 +324,16 @@ function checkMove(t) {
 			tempMove = new Move(held, [tX,tY], true);
 			if (hasMove(tempMove)) {
 				checkAttack(tX, tY, held.location[0], held.location[1], false);
+				prevMove = tempMove;
+				
 				move([tX, tY]);
 			} else {
 				resetHeld();
 			}
 		} else {
 			if (isValidMove(tempMove, held, false)) {
+				prevMove = tempMove;
+				
 				move([tX, tY]);
 			} else {
 				resetHeld();
@@ -336,29 +341,43 @@ function checkMove(t) {
 		}
 	}
 }
+
+//parses and executes AI moves
 function aiMove() {
 	
 	resetHeld();
 	
 	holding = true;
 	
+	//console.log(ai.position.toString());
 	ai.update(basePosition);
+	//console.log(ai.position.toString());
 	
 	var moveAI = ai.getMove();
 	
-	//held = moveAI.piece;
-	//var attack = moveAI.type;
-	//var cords = moveAI.cords;
+	//console.log(moveAI);
 	
-	//var tX = moveAI.cords[0];
-	//var tY = moveAI.cords[1];
-	//var pX = held.location[0];
-	//var pY = held.location[1];
+	held = moveAI.piece;
+	var attack = moveAI.type;
+	var cords = moveAI.cords;
+	
+	var tX = moveAI.cords[0];
+	var tY = moveAI.cords[1];
+	var pX = held.location[0];
+	var pY = held.location[1];
+	
+	//console.log(pX);
+	//console.log(pY);
+	
+	//console.log(tX);
+	//console.log(tY);
+
+	//console.log(moveAI);
 	
 	if (attack) {
-		//checkAttack(tX, tY, pX, pY, false)
+		checkAttack(tX, tY, pX, pY, false)
 	} else {
-		//move(cords);
+		move(cords);
 	}
 }
 // checks if a move is valid
@@ -439,7 +458,7 @@ function move(newCords) {
 		checkIfKing(piece);
 		crowned = piece.king;
 	}
-	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn);
+	
 	//console.log(basePosition.toString());
 
 	if (forcedLaw.checked && forced) {
@@ -474,12 +493,15 @@ function move(newCords) {
 		turnSwitch();
 		resetHeld();
 	}
-
+	
 	attackPlayed = false;
 }
 
 // switches the turn
 function turnSwitch() {
+	
+	//console.log(prevMove);
+	
 	moveCount ++;
 	//undoPos = moveCount;
 	
@@ -530,7 +552,10 @@ function turnSwitch() {
 		turnText.style.webkitTextStrokeColor  = "white";
 	}
 	*/
-	if (!turn && bot && moveCount > 6) {
+	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
+	
+	if (!turn && bot) {
+		ai.update(posBoard);
 		aiMove();
 	}
 	
@@ -577,7 +602,8 @@ function checkAttack(tx, ty, px, py, theory) {
 		return false;
 	} else if (!turn && type === "B") {
 		return false;
-	}
+	}whitePause = true;
+		blackPause = false;
 
 	if (posBoard[py][px].king && Math.abs(tx-px) == 2 && Math.abs(ty-py) == 2) {
 		if (posBoard[targetY][targetX] == null) {
@@ -956,14 +982,14 @@ function loadPos() {
 }
 */
 
-function timer(turn) {
+function timer(type) {
 	
 	var interval = 1000;
 	var expected = Date.now() + interval;
-	var paused = false;
+	let current = moveCount;
 	
 //https://stackoverflow.com/questions/29971898/how-to-create-an-accurate-timer-in-javascript
-	if (turn) {
+	if (type) {
 		setTimeout(whiteStep, interval);
 	} else {
 		setTimeout(blackStep, interval);
@@ -973,8 +999,13 @@ function timer(turn) {
 	function whiteStep() {
 		var drift = Date.now() - expected;
 
+		
+		if (drift > interval / 4) {
+			drift = 0;
+		}
+		
 		whiteSeconds --;
-
+		
 		if (whiteSeconds < 10) {
 			timerWhite.style.color = "red";
 		} else if (whiteSeconds > 10 && timerWhite.style.color === "red") {
@@ -1020,7 +1051,7 @@ function timer(turn) {
 		
 		timerWhite.innerHTML = output;
 		expected += interval;
-
+		
 		if (whiteSeconds === 0) {
 			whitePause = true;
 			winner = "b";
@@ -1028,14 +1059,18 @@ function timer(turn) {
 			sound.winS();
 			stopGame();
 		}
-		if (!whitePause) {
+		if (!whitePause && current == moveCount) {
     		setTimeout(whiteStep, Math.max(0, interval - drift));
 		}
 	}
 	
 	function blackStep() {
 		var drift = Date.now() - expected;
-
+		
+		if (drift > interval / 4) {
+			drift = 0;
+		}
+		
 		blackSeconds --;
 		
 		if (blackSeconds < 10) {
@@ -1091,7 +1126,7 @@ function timer(turn) {
 			stopGame();
 		}
 		
-		if (!blackPause) {
+		if (!blackPause && current == moveCount) {
     		setTimeout(blackStep, Math.max(0, interval - drift));
 		}
 	}

@@ -4,10 +4,11 @@
 +---+
 */
 import {Checker} from "./checker.js";
+import {Move} from "./move.js";
 
 // computer representation of the position
 class Position {
-	constructor(wcs, bcs, posBoard, wkc, bkc, wcc, bcc, moveCount, turn) {
+	constructor(wcs, bcs, posBoard, wkc, bkc, wcc, bcc, moveCount, turn, prevMove) {
 		this.wcs = wcs;
 		this.bcs = bcs;
 		this.wcc = wcc;
@@ -17,6 +18,7 @@ class Position {
 		this.moveCount = moveCount;
 		this.posBoard = posBoard;
 		this.turn = turn;
+		this.prevMove = prevMove;
 	}
 
 	toString() {
@@ -40,13 +42,14 @@ class Position {
 
 		textRep += "White Count: " + this.wcc + "\n";
 		textRep += "Black Count: " + this.bcc + "\n";
-		textRep += "";
+		textRep += "Move: " + this.prevMove.toString();
 
   		return textRep;
   	}
 
 	// deep copies the current self
-	
+	// by expanding objects to the primitive type level
+	// and reassigning everything to a copy
 	copy() {
 		var tempWCS = this.wcs;
 		var tempBCS = this.bcs;
@@ -107,9 +110,34 @@ class Position {
 		let nbcc = this.bcc;
 		let nmoveCount = this.moveCount;
 		let nturn = this.turn;
-
 		
-		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn);
+		var tempMove = this.prevMove;
+
+		var x = tempMove.cords[0];
+		var y = tempMove.cords[1];
+		var type = tempMove.type;
+		var tempPiece = tempMove.piece;
+		
+
+		let xp = tempPiece.location[0];
+		let yp = tempPiece.location[1];	
+		let king = tempPiece.king;
+		let source = tempPiece.source;
+		let color = tempPiece.color;
+		
+		var piece =	new Checker([xp, yp], color, source, king);
+		
+		let nprevMove = new Move(piece, [x,y], type);
+		
+		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn, nprevMove);
+	}
+
+	gameOver() {
+		if (this.wpc == 0 || this.bpc == 0) {
+			return true;
+		}
+
+		return false;
 	}
 }
 

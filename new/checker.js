@@ -7,6 +7,7 @@ class Checker {
 		this.color = color;
 		this.source = source;
 		this.king = king;
+		this.dead = false;
 	}
 
 	toString() {
@@ -17,7 +18,7 @@ class Checker {
 		if (piece.location[0] == this.location[0] &&
 		   piece.location[1] == this.location[1] &&
 		   piece.color == this.color && piece.source == this.source &&
-		   piece.king == this.king) {
+		   piece.king == this.king && piece.dead == this.dead) {
 			return true;
 		} else {
 			return false;
