@@ -8,7 +8,7 @@ class AI {
 	}
 	
 	getMove() {
-		console.log(this.position.toString());
+		//console.log(this.position.toString());
 		var start = Date.now();
 		
 		var score = [-Infinity, this.position]; 
@@ -24,7 +24,7 @@ class AI {
 		//depth = input + 1
 		
 		for (let i = 0; i < positions.length; i ++) {
-			var temp = this.minMax(positions[i], true, 3, -Infinity, Infinity);
+			var temp = this.minMax(positions[i], true, 2, -Infinity, Infinity);
 			//var temp = this.evaluate(positions[i]);
 			
 			//console.log(temp);
@@ -77,6 +77,12 @@ class AI {
 		var py = piece.location[1];
 		var mx = cords[0];
 		var my = cords[1];
+
+		if (piece.color === "B") {
+			position.turn = false;
+		} else {
+			position.turn = true;
+		}
 		
 		
 		board[py][px] = null;
@@ -84,6 +90,20 @@ class AI {
 		board[my][mx] = piece;
 		
 		if (type) {
+			if (board[(py + my) / 2][(px + mx) / 2].color === "W") {
+				position.wcc --;
+
+				if (board[(py + my) / 2][(px + mx) / 2].king) {
+					position.wkc --;
+				}
+			} else {
+				position.bcc --;
+
+				if (board[(py + my) / 2][(px + mx) / 2].king) {
+					position.bkc --;
+				}
+			}
+			
 			board[(py + my) / 2][(px + mx) / 2].dead = true;
 			board[(py + my) / 2][(px + mx) / 2] = null;
 		} 
@@ -114,8 +134,10 @@ class AI {
 
 		this.stats ++;
 		
-		if (depth == 0 /*|| position.gameOver*/) {
-			return this.evaluate(position);
+		if (depth == 0 || position.gameOver()) {
+			let score = this.evaluate(position);
+			console.log(score);
+			return score;
 		}
 	
 		if (player) {
@@ -149,6 +171,9 @@ class AI {
 
 	getPositions(position) {
 		var turn = position.turn;
+		
+		console.log(turn);
+		
 		var positions = [];
 		
 		var possibleMoves = allMovesPossible(turn);
@@ -239,12 +264,12 @@ class AI {
 					moves.push(new Move(piece, [x-1, y-1], false));
 				}
 
-				if (x+2 < 8 && y+2 < 8 && board[y-2][x-2] == null && board[y-2][x-2] != null && board[y-2][x-2].color != piece.color) {
-					moves.push(new Move(piece, [x-2, y-2], false));
+				if (x+2 < 8 && y+2 < 8 && board[y-2][x-2] == null && board[y-2][x-2] == null && board[(y-2)/2][(x-2)/2] != null && board[(y-2)/2][(x-2)/2].color != piece.color) {
+					moves.push(new Move(piece, [x-2, y-2], true));
 				}
 
-				if (x-2 > -1 && y+2 < 8 && board[y-2][x+2] == null && board[y-2][x+2] != null && board[y-2][x+2].color != piece.color) {
-					moves.push(new Move(piece, [x+2, y-2], false));
+				if (x-2 > -1 && y+2 < 8 && board[y-2][x+2] == null && board[y-2][x+2] == null && board[(y-2/2)][(x+2/2)] != null && board[(y-2/2)][(x+2/2)].color != piece.color) {
+					moves.push(new Move(piece, [x+2, y-2], true));
 				}
 				
 			}
@@ -258,12 +283,12 @@ class AI {
 					moves.push(new Move(piece, [x-1, y+1], false));
 				}
 
-				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+2][x+2] != null && board[y+2][x+2].color != piece.color) {
-					moves.push(new Move(piece, [x+2, y+2], false));
+				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+2][x+2] == null && board[(y+2/2)][(x+2/2)] != null && board[(y+2/2)][(x+2/2)].color != piece.color) {
+					moves.push(new Move(piece, [x+2, y+2], true));
 				}
 
-				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+2][x-2] != null && board[y+2][x-2].color != piece.color) {
-					moves.push(new Move(piece, [x-2, y+2], false));
+				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+2][x-2] == null && board[(y+2/2)][(x-2/2)] != null && board[(y+2/2)][(x-2/2)].color != piece.color) {
+					moves.push(new Move(piece, [x-2, y+2], true));
 				}
 			}
 			

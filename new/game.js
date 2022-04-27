@@ -91,8 +91,8 @@ var bot = true;
 // timer
 var whiteSeconds = 60;
 var blackSeconds = 60;
-//var whiteSeconds = 31536003;
-//var blackSeconds = 31536003;
+var whiteSeconds = 31536003;
+var blackSeconds = 31536003;
 
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
@@ -358,14 +358,16 @@ function aiMove() {
 	//console.log(moveAI);
 	
 	held = moveAI.piece;
-	var attack = moveAI.type;
+	var attacking = moveAI.type;
 	var cords = moveAI.cords;
 	
 	var tX = moveAI.cords[0];
 	var tY = moveAI.cords[1];
 	var pX = held.location[0];
 	var pY = held.location[1];
-	
+
+	tX = (pX + tX) / 2;
+	tY = (pY + tY) / 2;
 	//console.log(pX);
 	//console.log(pY);
 	
@@ -374,11 +376,11 @@ function aiMove() {
 
 	//console.log(moveAI);
 	
-	if (attack) {
-		checkAttack(tX, tY, pX, pY, false)
-	} else {
-		move(cords);
+	if (attacking) {
+		attack(tX, tY);
 	}
+	move(cords);
+	
 }
 // checks if a move is valid
 function isValidMove(move, piece, theory) {
