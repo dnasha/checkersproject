@@ -86,13 +86,13 @@ var forced = false;
 
 // ai
 var ai;
-var bot = true;
+var bot = false;
 
 // timer
 var whiteSeconds = 60;
 var blackSeconds = 60;
-var whiteSeconds = 31536003;
-var blackSeconds = 31536003;
+//var whiteSeconds = 31536003;
+//var blackSeconds = 31536003;
 
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
@@ -449,7 +449,7 @@ function move(newCords) {
 	} else {
 		sound.moveS();
 	}
-	
+		
 	posBoard[piece.location[1]][piece.location[0]] = null;
 	posBoard[newY][newX] = piece;
 
@@ -462,8 +462,8 @@ function move(newCords) {
 	}
 	
 	//console.log(basePosition.toString());
-
-	if (forcedLaw.checked && forced) {
+	
+	if (forced || attackPlayed) {
 
 		//console.log(forced);
 		forcedAttack();
@@ -604,8 +604,9 @@ function checkAttack(tx, ty, px, py, theory) {
 		return false;
 	} else if (!turn && type === "B") {
 		return false;
-	}whitePause = true;
-		blackPause = false;
+	}
+	//whitePause = true;
+	//blackPause = false;
 
 	if (posBoard[py][px].king && Math.abs(tx-px) == 2 && Math.abs(ty-py) == 2) {
 		if (posBoard[targetY][targetX] == null) {

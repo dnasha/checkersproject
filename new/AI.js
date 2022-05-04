@@ -78,10 +78,12 @@ class AI {
 		var mx = cords[0];
 		var my = cords[1];
 
+		//position.turn = !position.turn;
+		
 		if (piece.color === "B") {
-			position.turn = false;
-		} else {
 			position.turn = true;
+		} else {
+			position.turn = false;
 		}
 		
 		
@@ -103,12 +105,11 @@ class AI {
 					position.bkc --;
 				}
 			}
-			
+		
 			board[(py + my) / 2][(px + mx) / 2].dead = true;
 			board[(py + my) / 2][(px + mx) / 2] = null;
-		} 
-
-		piece.cords = cords;
+		}
+		piece.location = cords;
 	}
 	
 	evaluate(position) {
@@ -117,7 +118,7 @@ class AI {
 		var wkc = position.wkc;
 		var bkc = position.bkc;
 		
-		/*
+		
 		if (position.gameOver()) {
 			if (position.turn) {
 				return 1000;
@@ -125,7 +126,7 @@ class AI {
 				return -1000;
 			}
 		}
-		*/
+		
 		
 		return bcc - wcc + (2 * (bkc - wkc));
 	}
@@ -136,7 +137,7 @@ class AI {
 		
 		if (depth == 0 || position.gameOver()) {
 			let score = this.evaluate(position);
-			console.log(score);
+			//console.log(position.toString());
 			return score;
 		}
 	
@@ -172,7 +173,7 @@ class AI {
 	getPositions(position) {
 		var turn = position.turn;
 		
-		console.log(turn);
+		//console.log(turn);
 		
 		var positions = [];
 		
@@ -204,13 +205,11 @@ class AI {
 			var wcs = position.wcs;
 			var bcs = position.bcs;
 			
-			let prevTurn = turn;
 			var allMoves = [];
 			
 			if (side) {
-				turn = true;
 				for (let i = 0; i < wcs.length; i ++) {
-					if (wcs[i].source.style.visibility === "visible" && !possibleMoves(wcs[i]).length == 0) {
+					if (!wcs[i].dead && !possibleMoves(wcs[i]).length == 0) {
 						var moves = possibleMoves(wcs[i]);
 						
 						for (let i = 0; i < moves.length; i ++) {
@@ -219,9 +218,8 @@ class AI {
 					}
 				}
 			} else {
-				turn = false;
 				for (let i = 0; i < bcs.length; i ++) {
-					if (bcs[i].source.style.visibility === "visible" && !possibleMoves(bcs[i]).length == 0) {
+					if (!bcs[i].dead && !possibleMoves(bcs[i]).length == 0) {
 						var moves = possibleMoves(bcs[i]);
 
 						for (let i = 0; i < moves.length; i ++) {
@@ -232,43 +230,40 @@ class AI {
 				}
 			}
 	
-			/*
+			
 			for (var i = 0; i < allMoves.length; i ++) {
 				for (var j = 0; j < allMoves[i].length; j ++) {
 					console.log(allMoves[i][j].toString());
 				}
 			}
-			*/
-			
-			turn = prevTurn;
 	
 			return allMoves;
 		}
 		
 		function possibleMoves(piece) {
 			var moves = [];
-
+			
 			var board = position.posBoard;
 			var color = piece.color;
 			var location = piece.location;
 			var x = location[0];
 			var y = location[1];
 			var king = piece.king;
-
+			
 			if (color === "W" || king) {
-				if (x+1 < 8 && y+1 < 8 && board[y-1][x+1] == null) {
+				if (x+1 < 8 && y-1 > -1 && board[y-1][x+1] == null) {
 					moves.push(new Move(piece, [x+1, y-1], false));
 				}
 
-				if (x-1 > -1 && y+1 < 8 && board[y-1][x-1] == null) {
+				if (x-1 > -1 && y-1 > -1 && board[y-1][x-1] == null) {
 					moves.push(new Move(piece, [x-1, y-1], false));
 				}
 
-				if (x+2 < 8 && y+2 < 8 && board[y-2][x-2] == null && board[y-2][x-2] == null && board[(y-2)/2][(x-2)/2] != null && board[(y-2)/2][(x-2)/2].color != piece.color) {
+				if (x-2 > -1 && y-2 > -1 && board[y-2][x-2] == null && board[y-2][x-2] == null && board[(y + (y-2))/2][(x + (x-2))/2] != null && board[(y + (y-2))/2][(x + (x-2))/2].color != piece.color) {
 					moves.push(new Move(piece, [x-2, y-2], true));
 				}
 
-				if (x-2 > -1 && y+2 < 8 && board[y-2][x+2] == null && board[y-2][x+2] == null && board[(y-2/2)][(x+2/2)] != null && board[(y-2/2)][(x+2/2)].color != piece.color) {
+				if (x+2 < 8 && y-2 > -1 && board[y-2][x+2] == null && board[y-2][x+2] == null && board[(y + (y-2))/2][(x + (x+2))/2] != null && board[(y + (y-2))/2][(x + (x+2))/2].color != piece.color) {
 					moves.push(new Move(piece, [x+2, y-2], true));
 				}
 				
@@ -283,11 +278,11 @@ class AI {
 					moves.push(new Move(piece, [x-1, y+1], false));
 				}
 
-				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+2][x+2] == null && board[(y+2/2)][(x+2/2)] != null && board[(y+2/2)][(x+2/2)].color != piece.color) {
+				if (x+2 < 8 && y+2 < 8 && board[y+2][x+2] == null && board[y+2][x+2] == null && board[(y + (y+2))/2][(x + (x+2))/2] != null && board[(y + (y+2))/2][(x + (x+2))/2].color != piece.color) {
 					moves.push(new Move(piece, [x+2, y+2], true));
 				}
 
-				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+2][x-2] == null && board[(y+2/2)][(x-2/2)] != null && board[(y+2/2)][(x-2/2)].color != piece.color) {
+				if (x-2 > -1 && y+2 < 8 && board[y+2][x-2] == null && board[y+2][x-2] == null && board[(y + (y+2))/2][(x + (x-2))/2] != null && board[(y + (y+2))/2][(x + (x-2))/2].color != piece.color) {
 					moves.push(new Move(piece, [x-2, y+2], true));
 				}
 			}
