@@ -5,7 +5,7 @@ import {Move} from "./move.js";
 import {AI} from "./AI.js";
 import {checkerSound} from "./checkerSound.js";
 import {PieceTracker} from "./pieceTracker.js";
-//import _ from "./lodash/lodash.js";
+
 // Developed by Dan Sharan
 
 // ***************global vars***************
@@ -17,14 +17,27 @@ var attackPlayed = false;
 // everything
 var content = document.getElementById("everything");
 
-// element lists
+// element lists *******
+
+// all tiles DOM
 var tiles = document.getElementsByClassName("tile");
+
+// black tiles DOM
 var bTiles = document.getElementsByClassName("black_square");
+
+// white tiles DOM
 var wTiles = document.getElementsByClassName("white_square");
+
+// white checkers DOM
 var wCheckers = document.getElementsByClassName("white_checker");
+
+// black checkers DOM
 var bCheckers = document.getElementsByClassName("black_checker");
+
+// all checkers
 var checkers = document.getElementsByClassName("checker");
 
+// black and white mini piece trackers
 var blackTaken = document.getElementsByClassName("whiteMini");
 var whiteTaken = document.getElementsByClassName("blackMini");
 
@@ -39,7 +52,7 @@ var bKingCount = 0;
 
 // singular elements
 var playArea = document.getElementById("board");
-var turnText = document.getElementById("turn");
+//var turnText = document.getElementById("turn");
 var resetButton = document.getElementById("reset");
 var forcedLaw = document.getElementById("forcedLaw");
 
@@ -77,8 +90,9 @@ var vp;
 
 var forcedMoves = [];
 var forced = false;
+
 //var jumper;
-// undo moves
+//undo moves
 //var undoButton = document.getElementById("undo");
 //var redoButton = document.getElementById("redo");
 //var prevMoves = [];
@@ -86,13 +100,13 @@ var forced = false;
 
 // ai
 var ai;
-var bot = false;
+var bot = true;
 
 // timer
 var whiteSeconds = 60;
 var blackSeconds = 60;
-//var whiteSeconds = 31536003;
-//var blackSeconds = 31536003;
+var whiteSeconds = 31536003;
+var blackSeconds = 31536003;
 
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
@@ -378,8 +392,9 @@ function aiMove() {
 	
 	if (attacking) {
 		attack(tX, tY);
-	}
+	} 
 	move(cords);
+	ai.update(basePosition);
 	
 }
 // checks if a move is valid
@@ -554,7 +569,10 @@ function turnSwitch() {
 		turnText.style.webkitTextStrokeColor  = "white";
 	}
 	*/
+	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
+	
+	//console.log(basePosition.toString());
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
@@ -590,7 +608,11 @@ function crownPiece(piece) {
 // updates visual and mathematical
 // piece position
 function checkAttack(tx, ty, px, py, theory) {
-
+	
+    if (!turn && bot) {
+		return true;
+	}
+	
 	var targetX = (tx+px)/2;
 	var targetY = (ty+py)/2;
 
