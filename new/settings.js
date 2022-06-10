@@ -7,7 +7,7 @@ let blackTile = document.getElementsByClassName("black_square");
 let whiteTile = document.getElementsByClassName("white_square");
 let blackChecker = document.getElementsByClassName("black_checker");
 let whiteChecker = document.getElementsByClassName("white_checker");
-	
+
 let displayed = false;
 
 let black = document.getElementById("dark");

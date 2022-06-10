@@ -37,7 +37,7 @@ class AI {
 		//depth = input + 1
 		
 		for (let i = 0; i < positions.length; i ++) {
-			var temp = this.minMax(positions[i], true, 5, -Infinity, Infinity);
+			var temp = this.minMax(positions[i], true, 4, -Infinity, Infinity);
 			//var temp = this.evaluate(positions[i]);
 			
 			//console.log(temp);

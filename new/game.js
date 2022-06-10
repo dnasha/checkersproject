@@ -100,7 +100,8 @@ var forced = false;
 
 // ai
 var ai;
-var bot = true;
+var bot = false;
+let botCondition = document.getElementById("botMode");
 
 // timer
 var whiteSeconds = 60;
@@ -126,6 +127,8 @@ window.onload = function start() {
 	for (let i = 0; i < checkers.length; i ++) {
 		checkers.item(i).style.visibility = "visible";
 	}
+	
+	botCondition.addEventListener("click", function(){flipFlopAI();});
 	
 	populateArrays();
 	clickListeners();
@@ -155,6 +158,19 @@ window.onload = function start() {
 	ai = new AI(basePosition);
 	//prevMoves.push(basePosition);
 	//console.log(basePosition.toString());
+}
+
+function flipFlopAI() {
+	if (botCondition.checked) {
+		bot = true;
+		if (!turn) {
+			ai.update(posBoard);
+			setTimeout(function(){aiMove();}, 1000);
+		}
+		
+	} else {
+		bot = false;
+	}
 }
 
 // fills arrays of pieces with checker objects
@@ -576,7 +592,7 @@ function turnSwitch() {
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
-		aiMove();
+		setTimeout(function(){aiMove();}, 1000);
 	}
 	
 }
@@ -584,6 +600,8 @@ function turnSwitch() {
 // checks if a piece is a king 
 // and appoints it if it is one
 function checkIfKing(piece) {
+	console.log(piece);
+	console.log(piece.location);
 	if (!piece.king) {
 		if (piece.color === "W" && piece.location[1] == 0) {
 			crownPiece(piece);
