@@ -106,8 +106,8 @@ let botCondition = document.getElementById("botMode");
 // timer
 var whiteSeconds = 60;
 var blackSeconds = 60;
-var whiteSeconds = 31536003;
-var blackSeconds = 31536003;
+//var whiteSeconds = 31536003;
+//var blackSeconds = 31536003;
 
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
