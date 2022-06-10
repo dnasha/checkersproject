@@ -7,13 +7,52 @@
 		<link href="./main/game.css" rel="stylesheet" type="text/css"/>
 	</head>
 	<body id="everything">
-		<div id="content">
-			
+		<div id="settings"> 
+			<img id="cog" src="./pictures/cog.png" alt="settings" width="35" height="35">
+			<div id="menu">
+				<div id="optitle"> Style: </div>
+				<div id="row">
+					<div class="option" id="dark" title="Dark Mode"></div>
+					<div class="option" id="light" title="Light Mode"></div>
+					<div class="option" id="default" title="Default">								 			<div id="right_part"> </div>
+						<div id="left_part"> </div>
+					</div>
+				</div>
+				<div id="optitle"> Theme: </div>
+				<div id="row">
+					<div class="option" id="classic" title="Classic"></div>
+					<div class="option" id="ice" title="Ice"></div>
+					<div class="option" id="beach" title="Beach"></div>
+				</div>
+				<div id="row">
+					<div class="option" id="forest" title="Forest"></div>
+					<div class="option" id="pink" title="Pink"></div>
+					<div class="option" id="ukraine" title="Ukraine">
+						<div id="top_part"> </div>
+						<div id="bottom_part"> </div>
+					</div>
+					
+				</div>	
+			</div>
+		</div>
+		
+		<div id="content">	
 		<div id="title">Checkers</div>
-			
 		
 		<div id="topRow">
 			<div id="blackTaken"> 
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
+				<div class="whiteMini"> </div>
 				<div class="whiteMini"> </div>
 				<div class="whiteMini"> </div>
 				<div class="whiteMini"> </div>
@@ -154,30 +193,36 @@
 				<div class="blackMini"> </div>
 				<div class="blackMini"> </div>
 				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
+				<div class="blackMini"> </div>
 			</div>
 			
 			<div id="timerWhite" class="timer">?</div>
 		</div>	
-				
-		<div id="turn" hidden>
-			Whites turn...
-		</div>
-		
-		<button id="undo" hidden>undo</button>
-		<button id="redo" hidden>redo</button>
 			
 		<button id="reset">New Game</button>
 		<br>
 		<input type="checkbox" id="forcedLaw" name="forced" checked>
 		<label for="forced" > Forced Moves?</label>
-		<input type="checkbox" id="botMode" name="botMode" hidden>
-		<label for="botMode" hidden > VS AI (Not Functional Yet)</label><br>
+		<input type="checkbox" id="botMode" name="botMode" checked>
+		<label for="botMode" > VS AI </label><br>
 		</div> 
 		<audio id="startAUD" src="./audio/start.wav" type="audio/wav"></audio>
 		<audio id="moveAUD" src="./audio/move.wav" type="audio/wav"></audio>
 		<audio id="attackAUD" src="./audio/attack.wav" type="audio/wav"></audio>
 		<audio id="checkAUD" src="./audio/check.wav" type="audio/wav"></audio>
 		<audio id="winAUD" src="./audio/win.wav" type="audio/wav"></audio>
+		<script src="./new/settings.js" type="module"></script>
 		<script src="./new/game.js" type="module"></script>
 	</body>
 </html>

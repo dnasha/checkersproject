@@ -24,6 +24,13 @@ class Checker {
 			return false;
 		}
 	}
+
+	type() {
+		if (this.color === "W"){
+			return true;
+		} 
+		return false;
+	}
 }
 
 export {Checker}

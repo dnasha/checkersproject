@@ -37,7 +37,7 @@ class AI {
 		//depth = input + 1
 		
 		for (let i = 0; i < positions.length; i ++) {
-			var temp = this.minMax(positions[i], true, 4, -Infinity, Infinity);
+			var temp = this.minMax(positions[i], true, 5, -Infinity, Infinity);
 			//var temp = this.evaluate(positions[i]);
 			
 			//console.log(temp);
@@ -96,8 +96,16 @@ class AI {
 		
 		if (piece.color === "B") {
 			position.turn = true;
+			if (!piece.king && my == 7) {
+				piece.king = true;
+				position.bkc ++;
+			}
 		} else {
 			position.turn = false;
+			if (!piece.king && my == 0) {
+				piece.king = true;
+				position.wkc ++;
+			}
 		}
 		
 		if (type) {
@@ -188,7 +196,7 @@ class AI {
 	}
 	
 	minMax(position, player, depth, alpha, beta) {
-		console.log(player);
+		//console.log(player);
 		this.stats ++;
 		
 		if (depth == 0 || position.gameOver()) {
@@ -239,7 +247,7 @@ class AI {
 		
 		for (let i = 0; i < possibleMovess.length; i++) {
 			//console.log("passed0.1");
-			console.log(possibleMovess[i].toString());
+			//console.log(possibleMovess[i].toString());
 			positions.push(position.copy());
 			
 			//console.log("passed0.2");

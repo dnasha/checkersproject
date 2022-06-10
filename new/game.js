@@ -478,7 +478,7 @@ function move(newCords) {
 	
 	//console.log(basePosition.toString());
 	
-	if (forced || attackPlayed) {
+	if (forced || attackPlayed && turn == basePosition.prevMove.piece.type()) {
 
 		//console.log(forced);
 		forcedAttack();
@@ -516,8 +516,8 @@ function move(newCords) {
 
 // switches the turn
 function turnSwitch() {
-	
-	//console.log(prevMove);
+	//console.log(basePosition.toString());
+	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
 	
 	moveCount ++;
 	//undoPos = moveCount;
@@ -572,7 +572,7 @@ function turnSwitch() {
 	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
 	
-	//console.log(basePosition.toString());
+	console.log(basePosition.toString());
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
@@ -608,10 +608,6 @@ function crownPiece(piece) {
 // updates visual and mathematical
 // piece position
 function checkAttack(tx, ty, px, py, theory) {
-	
-    if (!turn && bot) {
-		return true;
-	}
 	
 	var targetX = (tx+px)/2;
 	var targetY = (ty+py)/2;
@@ -680,6 +676,7 @@ function attack(tX, tY) {
 	}
 	
 	piece.source.style.visibility = "hidden";
+	piece.dead = true;
 	
 	attackPlayed = true;
 	
@@ -811,8 +808,6 @@ function checkWin() {
 function stopGame() {
 	whitePause = true;
 	blackPause = true;
-	
-	turnText.style.visibility = "hidden";
 
 	if (winner === "w") {
 		alert("white wins");
