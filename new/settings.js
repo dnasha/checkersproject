@@ -154,7 +154,7 @@ function foresty() {
 			whiteChecker.item(i).style.backgroundImage = "radial-gradient(rgb(200, 255, 200), rgb(150, 150, 150))";
 		} 
 		if (blackChecker.item(i).style.backgroundImage != "") {
-			blackChecker.item(i).style.backgroundImage = "radial-gradient(rgb(25,39,13), rgb(50, 50, 50))";
+			blackChecker.item(i).style.backgroundImage = "radial-gradient(rgb(25,39,13), rgb(150, 150, 150))";
 		} 
 	}
 	

@@ -42,7 +42,7 @@ class AI {
 		// }
 		
 		for (let i = 0; i < positions.length; i ++) {
-			var temp = this.minMax(positions[i], false, 5, -Infinity, Infinity);
+			var temp = this.minMax(positions[i], false, 4, -Infinity, Infinity);
 			//var temp = this.evaluate(positions[i]);
 			
 			//console.log(temp);
@@ -222,9 +222,10 @@ class AI {
 				return -1000;
 			}
 		}
-		
-		
-		return bcc - wcc + (2 * (bkc - wkc));
+
+		let score = bcc - wcc + (2 * (bkc - wkc));
+
+		return score;
 	}
 	
 	minMax(position, player, depth, alpha, beta) {

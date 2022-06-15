@@ -100,14 +100,14 @@ var forced = false;
 
 // ai
 var ai;
-var bot = true;
+var bot = false;
 let botCondition = document.getElementById("botMode");
 
 // timer
-//var whiteSeconds = 60;
-//var blackSeconds = 60;
-var whiteSeconds = 31536003;
-var blackSeconds = 31536003;
+var whiteSeconds = 180;
+var blackSeconds = 180;
+//var whiteSeconds = 31536003;
+//var blackSeconds = 31536003;
 
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
@@ -165,7 +165,7 @@ function flipFlopAI() {
 		bot = true;
 		if (!turn) {
 			ai.update(posBoard);
-			setTimeout(function(){aiMove();}, 1000);
+			setTimeout(function(){aiMove();}, 100);
 		}
 		
 	} else {
@@ -409,7 +409,7 @@ function aiMove() {
 	// console.log(mX);
 	// console.log(mY);
 	
-	blackSeconds -= Math.floor((Date.now() - start)/1000);
+	blackSeconds -= Math.ceil((Date.now() - start)/1000);
 	
 	if (attacking) {
 		attack(tX, tY);
@@ -598,7 +598,7 @@ function turnSwitch() {
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
-		setTimeout(function(){aiMove();}, 1000);
+		setTimeout(function(){aiMove();}, 100);
 	}
 }
 	
@@ -907,8 +907,8 @@ function resetGame() {
 	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn);
 	
-	whiteSeconds = 60;
-	blackSeconds = 60;
+	whiteSeconds = 180;
+	blackSeconds = 180;
 	whitePause = false;
 	blackPause = false;
 
