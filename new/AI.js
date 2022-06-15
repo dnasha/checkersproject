@@ -1,5 +1,5 @@
 import {Move} from "./move.js";
-
+//import {cloneDeep} from "./lodash.js";
 class AI {
 	
 	constructor(currentPos) {
@@ -15,18 +15,19 @@ class AI {
 		
 		var positions = this.getPositions(this.position);
 
-		//for (let i = 0; i < positions.length; i ++) {
-			//console.log(positions[i].toString());
-		//}
+		 // for (let i = 0; i < positions.length; i ++) {
+		 // 	console.log(positions[i].toString());
+		 // }
 		
-		// var position1 = this.position;
-		// var position2 = this.position.copy();
+		 //var position1 = this.position;
+		// var position2 = _.cloneDeep(this.position);
 
-		// console.log(position1.prevMove);
-		// console.log(position2.prevMove);
-		// position1.prevMove = null;
-		// console.log(position1.prevMove);
-		// console.log(position2.prevMove);
+		//console.log(position1.prevMove);
+	    //console.log(position2.prevMove);
+		
+		//position1.prevMove.piece.location = [1,1];
+		//console.log(position1.prevMove);
+		//console.log(position2.prevMove);
 		
 		//var npos = this.position.copy();
 
@@ -36,8 +37,12 @@ class AI {
 
 		//depth = input + 1
 		
+		// for (let i = 0; i < positions.length; i ++) {
+		// 	console.log(positions[i].toString());
+		// }
+		
 		for (let i = 0; i < positions.length; i ++) {
-			var temp = this.minMax(positions[i], true, 4, -Infinity, Infinity);
+			var temp = this.minMax(positions[i], false, 5, -Infinity, Infinity);
 			//var temp = this.evaluate(positions[i]);
 			
 			//console.log(temp);
@@ -69,7 +74,8 @@ class AI {
 		let optimalMove = new Move(piece, cords, type);
 		
 		//for (let i = 0; i < positions.length; i ++) {
-		//	console.log(positions[i].toString());
+		//	 
+        console.log(best.toString());
 		//}
 		
 		return optimalMove;
@@ -83,14 +89,19 @@ class AI {
 	updatePosboard(position, move) {
 
 		let board = position.posBoard;
-		let piece = move.piece;
 		let cords = move.cords;
 		let type = move.type;
-		let px = piece.location[0];
-		let py = piece.location[1];
+		let oldPiece = move.piece;
+		let px = oldPiece.location[0];
+		let py = oldPiece.location[1];
 		let mx = cords[0];
 		let my = cords[1];
-		
+		let piece = board[py][px];
+		position.prevMove = new Move(piece, [mx, my], type);
+		//console.log(move.toString());
+		// console.log("**********************************");
+		// console.log(position.toString());
+		// console.log(move.toString());
 		
 		//position.turn = !position.turn;
 		
@@ -108,34 +119,56 @@ class AI {
 			}
 		}
 		
+		board[my][mx] = piece;
+		board[py][px] = null;
+		
+		
 		if (type) {
-			 //console.log(position.toString());
-			 //console.log(position.prevMove.toString());
-			 //console.log(px + " " + py);
-			 //console.log(mx + " " + my);
-			 //console.log(board[(py + my) / 2][(px + mx) / 2]);
-			if (board[(py + my) / 2][(px + mx) / 2].color === "W") {
+			var attacked = board[Math.round((py + my) / 2)][Math.round((px + mx) / 2)];
+			  // console.log(position.toString());
+			  // console.log(position.prevMove.toString());
+			  // console.log(px + " " + py);
+			  // console.log(mx + " " + my);
+			  // console.log(attacked);
+			if (attacked.color === "W") {
 				position.wcc --;
 
-				if (board[(py + my) / 2][(px + mx) / 2].king) {
+				if (attacked.king) {
 					position.wkc --;
 				}
 			} else {
 				position.bcc --;
 
-				if (board[(py + my) / 2][(px + mx) / 2].king) {
+				if (attacked.king) {
 					position.bkc --;
 				}
 			}
 		
-			board[(py + my) / 2][(px + mx) / 2].dead = true;
-			board[(py + my) / 2][(px + mx) / 2] = null;
+			attacked.dead = true;
+			board[attacked.location[1]][attacked.location[0]] = null;
+			
+			// var moves = this.possibleMoves(position, piece);
+	
+			// for (let i = 0; i < moves.length; i ++) {
+			// 	var current = moves[i];
+				
+			// 	if (current.type = true) {
+			// 		this.updatePosboard(position, current);
+			// 		i = moves.length;
+			// 	}
+			// }
 		}
 		
-		board[my][mx] = piece;
-		board[py][px] = null;
+		//console.log(piece.location);
+
+		piece.location = [mx, my];
+		//console.log(position.toString());
+		//px = mx;
+		//py = my;
 		
-		// setTimeout(function()
+		//console.log(piece.location);
+		
+	// setTimeout(function()
   //   	{
   //       display(position);
   //   	}, 1000);
@@ -169,11 +202,10 @@ class AI {
   //   	{
   //       display(this.position);
   //   	}, 3000);
-		position.turn = !position.turn;
+		//position.turn = !position.turn;
 		//piece.location[0] = cords[0];
 		//piece.location[1] = cords[1];
-		px = mx;
-		py = my;
+		
 	}
 	
 	evaluate(position) {
@@ -202,11 +234,13 @@ class AI {
 		if (depth == 0 || position.gameOver()) {
 			let score = this.evaluate(position);
 			//console.log(position.toString());
+			//console.log(score);
 			return score;
 		}
 	
 		if (player) {
 			var maxEval = -Infinity;
+			//position.turn = !position.turn;
 			var positions = this.getPositions(position);
 			for (let i = 0; i < positions.length; i ++ ) {
 				var ev = this.minMax(positions[i], false, depth - 1, alpha, beta);
@@ -220,6 +254,7 @@ class AI {
 	
 		} else {
 			var minEval = Infinity;
+			//position.turn = !position.turn;
 			var positions = this.getPositions(position);
 			for (let i = 0; i < positions.length; i ++ ) {
 				var ev = this.minMax(positions[i], true, depth - 1, alpha, beta);
@@ -242,25 +277,27 @@ class AI {
 		var positions = [];
 		
 		let possibleMovess = allMovesPossible(turn, position);
-
+		
+		for (let i = 0; i < possibleMovess.length; i++) {
+			positions.push(_.cloneDeep(position));
+			positions[i].prevMove = (_.cloneDeep(positions[i].prevMove));
+		}
 		//console.log(possibleMovess[4].toString());
 		
 		for (let i = 0; i < possibleMovess.length; i++) {
 			//console.log("passed0.1");
 			//console.log(possibleMovess[i].toString());
-			positions.push(position.copy());
 			
 			//console.log("passed0.2");
 			
 			let current = positions[i];
 			
 			//console.log("passed0.3");
-			
-			current.prevMove = possibleMovess[i];
+			//console.log(current.toString());
 		
 			//console.log("**********************************");
 			//console.log(current.toString());
-			//console.log(possibleMoves[i].toString());
+			//console.log(possibleMovess[i].toString());
 			this.updatePosboard(current, possibleMovess[i]);
 			//console.log(current.toString());
 			
@@ -278,9 +315,10 @@ class AI {
 			
 			if (side) {
 				for (let i = 0; i < wcs.length; i ++) {
-					if (!wcs[i].dead && !possibleMoves(wcs[i]).length == 0) {
-						var moves = possibleMoves(wcs[i]);
-						
+					
+					var moves = possibleMoves(wcs[i], position);
+					
+					if (!wcs[i].dead && moves.length != 0) {
 						for (let i = 0; i < moves.length; i ++) {
 							allMoves.push(moves[i]);
 						}
@@ -288,9 +326,10 @@ class AI {
 				}
 			} else {
 				for (let i = 0; i < bcs.length; i ++) {
-					if (!bcs[i].dead && !possibleMoves(bcs[i]).length == 0) {
-						var moves = possibleMoves(bcs[i]);
-						
+					
+					var moves = possibleMoves(bcs[i], position);
+					
+					if (!bcs[i].dead && moves.length != 0) {
 						for (let i = 0; i < moves.length; i ++) {
 							allMoves.push(moves[i]);
 						}
@@ -310,9 +349,8 @@ class AI {
 			return allMoves;
 		}
 		
-		function possibleMoves(piece) {
+		function possibleMoves(piece, position) {
 			var moves = [];
-			
 			var board = position.posBoard;
 			var color = piece.color;
 			var location = piece.location;
@@ -358,16 +396,13 @@ class AI {
 			}
 			
 			//console.log(moves.length);
-			 for (let i = 0; i < moves.length; i ++) {
-			 	//console.log(moves[i].toString()); 
-			 }
+			 // for (let i = 0; i < moves.length; i ++) {
+			 //  	console.log(moves[i].toString()); 
+			 //  }
 			return moves;
 		}
 		
 	}
-
-	
-
 	
 }
 

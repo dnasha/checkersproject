@@ -58,8 +58,8 @@ class Position {
 
 		for (let i = 0; i < tempWCS.length; i ++) {
 			
-			let x = tempWCS[i].location[0];
-			let y = tempWCS[i].location[1];
+			const x = tempWCS[i].location[0];
+			const y = tempWCS[i].location[1];
 			
 			let king = tempWCS[i].king;
 			
@@ -72,8 +72,8 @@ class Position {
 
 		for (let i = 0; i < tempBCS.length; i ++) {
 			
-			let x = tempBCS[i].location[0];
-			let y = tempBCS[i].location[1];
+			const x = tempBCS[i].location[0];
+			const y = tempBCS[i].location[1];
 			
 			let king = tempBCS[i].king;
 			
@@ -128,7 +128,6 @@ class Position {
 		var piece =	new Checker([xp, yp], color, source, king);
 		
 		let nprevMove = new Move(piece, [x,y], type);
-		
 		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn, nprevMove);
 	}
 

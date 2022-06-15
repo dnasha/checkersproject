@@ -100,14 +100,14 @@ var forced = false;
 
 // ai
 var ai;
-var bot = false;
+var bot = true;
 let botCondition = document.getElementById("botMode");
 
 // timer
-var whiteSeconds = 60;
-var blackSeconds = 60;
-//var whiteSeconds = 31536003;
-//var blackSeconds = 31536003;
+//var whiteSeconds = 60;
+//var blackSeconds = 60;
+var whiteSeconds = 31536003;
+var blackSeconds = 31536003;
 
 var timerWhite = document.getElementById("timerWhite");
 var timerBlack = document.getElementById("timerBlack");
@@ -180,7 +180,7 @@ function populateArrays() {
 
 	for (var i = 1; i <= bPieceCount; i ++) {
 
-		bcs.push(new Checker([x, y], "B", bCheckers.item(i-1), false));
+		bcs.push(new Checker([x, y], "B", bCheckers.item(i-1), false, i-1));
 
 		if (i % 8 == 0) {
 			x = 1;
@@ -200,7 +200,7 @@ function populateArrays() {
 
 	for (var i = 1; i <= wPieceCount; i ++) {
 
-		wcs.push(new Checker([x, y], "W", wCheckers.item(i-1), false));
+		wcs.push(new Checker([x, y], "W", wCheckers.item(i-1), false, i-1));
 
 		if (i % 8 == 0) {
 			x = 0;
@@ -375,6 +375,8 @@ function checkMove(t) {
 //parses and executes AI moves
 function aiMove() {
 	
+	var start = Date.now();
+	
 	resetHeld();
 	
 	holding = true;
@@ -385,33 +387,36 @@ function aiMove() {
 	
 	var moveAI = ai.getMove();
 	
-	//console.log(moveAI);
+	//console.log(ai.position.toString());
 	
-	held = moveAI.piece;
+	held = bcs[moveAI.piece.index];
+	
+	console.log(moveAI);
+	
 	var attacking = moveAI.type;
 	var cords = moveAI.cords;
 	
-	var tX = moveAI.cords[0];
-	var tY = moveAI.cords[1];
-	var pX = held.location[0];
-	var pY = held.location[1];
+	let mX = moveAI.cords[0];
+	let mY = moveAI.cords[1];
+	let pX = held.location[0];
+	let pY = held.location[1];
 
-	tX = (pX + tX) / 2;
-	tY = (pY + tY) / 2;
-	//console.log(pX);
-	//console.log(pY);
+	let tX = (pX + mX) / 2;
+	let tY = (pY + mY) / 2;
 	
-	//console.log(tX);
-	//console.log(tY);
-
-	//console.log(moveAI);
+	// console.log(pX);
+	// console.log(pY);
+	// console.log(mX);
+	// console.log(mY);
+	
+	blackSeconds -= Math.floor((Date.now() - start)/1000);
 	
 	if (attacking) {
 		attack(tX, tY);
 	} 
 	move(cords);
+	//console.log(basePosition.toString());
 	ai.update(basePosition);
-	
 }
 // checks if a move is valid
 function isValidMove(move, piece, theory) {
@@ -479,6 +484,7 @@ function move(newCords) {
 		sound.attackS();
 	} else {
 		sound.moveS();
+		forced = false;
 	}
 		
 	posBoard[piece.location[1]][piece.location[0]] = null;
@@ -566,7 +572,7 @@ function turnSwitch() {
 		}
 		
 		timer(turn);
-	}
+	
 	//console.log(forced);
 	//console.log(forcedMoves);
 	
@@ -588,27 +594,34 @@ function turnSwitch() {
 	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
 	
-	console.log(basePosition.toString());
+	//console.log(basePosition.toString());
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
 		setTimeout(function(){aiMove();}, 1000);
 	}
+}
 	
 }
 
 // checks if a piece is a king 
 // and appoints it if it is one
 function checkIfKing(piece) {
-	console.log(piece);
-	console.log(piece.location);
+	//console.log(piece);
+	//console.log(piece.location);
 	if (!piece.king) {
 		if (piece.color === "W" && piece.location[1] == 0) {
 			crownPiece(piece);
 		} else if (piece.color === "B" && piece.location[1] == 7) {
 			crownPiece(piece);
 		}
-	}
+	} else {
+		if (piece.color === "W") {
+			piece.source.style.backgroundImage = "radial-gradient(white, rgb(150, 150, 150), black)"
+		} else {
+			piece.source.style.backgroundImage = "radial-gradient(black, rgb(50, 50, 50), rgb(150, 150, 150))";
+		}
+	} 
 }
 
 // turns a piece into a king
@@ -683,9 +696,6 @@ function checkAttack(tx, ty, px, py, theory) {
 function attack(tX, tY) {
 	var piece = posBoard[tY][tX];
 	var type = piece.color;
-
-	var hX = held.location[0];
-	var hY = held.location[1];
 
 	if (turn && type === "W") {
 		return false;

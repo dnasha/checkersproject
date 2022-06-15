@@ -1,13 +1,14 @@
 // the checker piece
 class Checker {
-	constructor(location, color, source, king) {
-		// row, collumn
-		//[y,x]
+	constructor(location, color, source, king, index) {
+		// collumn, row
+		//[x,y]
 		this.location = location;
 		this.color = color;
 		this.source = source;
 		this.king = king;
 		this.dead = false;
+		this.index = index;
 	}
 
 	toString() {
