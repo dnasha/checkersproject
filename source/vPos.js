@@ -1,3 +1,8 @@
+// the vPos class stands for visual position
+// it is responsible for aranging all of the initial pieces and
+// tiles in order to display the checkerboard and initial
+// positions of the checker pieces
+
 class vPos {
 
 	constructor (tiles, bTiles, wCheckers, bCheckers, wPieceCount, bPieceCount) {

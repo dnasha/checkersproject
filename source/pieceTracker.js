@@ -1,3 +1,8 @@
+// the piece tracker class is responsible for showing or hiding
+// those little piece trackers next to either of the timers
+// it helps players visualise how much they are up or down by in terms
+// of piece count
+
 class PieceTracker {
 	constructor (pieces) {
 		this.pieces = pieces;

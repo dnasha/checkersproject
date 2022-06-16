@@ -1,51 +1,30 @@
 import {Move} from "./move.js";
-//import {cloneDeep} from "./lodash.js";
+
+// The AI class is responsible for playing against the player when enabled
+// It uses the MiniMax algorithm and an evaluation heuristic to account
+// for several moves in the future and determine the best move to make in the
+// present
 class AI {
 	
 	constructor(currentPos) {
 		this.position = currentPos;
 		this.stats = 0;
 	}
-	
-	getMove() {
-		//console.log(this.position.toString());
+
+	// main function that reaches out to the helper methods
+	// to generate the move that the AI wants to make
+	getMove() {	
 		var start = Date.now();
 		
 		var score = [-Infinity, this.position]; 
 		
 		var positions = this.getPositions(this.position);
 
-		 // for (let i = 0; i < positions.length; i ++) {
-		 // 	console.log(positions[i].toString());
-		 // }
-		
-		 //var position1 = this.position;
-		// var position2 = _.cloneDeep(this.position);
-
-		//console.log(position1.prevMove);
-	    //console.log(position2.prevMove);
-		
-		//position1.prevMove.piece.location = [1,1];
-		//console.log(position1.prevMove);
-		//console.log(position2.prevMove);
-		
-		//var npos = this.position.copy();
-
-		//console.log("Original \n" + this.position.toString() + "\n");
-		
-		//console.log("Copy \n" + npos.toString());
-
-		//depth = input + 1
-		
-		// for (let i = 0; i < positions.length; i ++) {
-		// 	console.log(positions[i].toString());
-		// }
-		
+		// going through posible initial branches
+		// of outcomes to grade them and pick
+		// the best one
 		for (let i = 0; i < positions.length; i ++) {
 			var temp = this.minMax(positions[i], false, 4, -Infinity, Infinity);
-			//var temp = this.evaluate(positions[i]);
-			
-			//console.log(temp);
 			
 			if (temp > score[0]) {
 				score[0] = temp;
@@ -53,18 +32,11 @@ class AI {
 			}
 			
 		}
-		
-		
-		//console.log("passed2");
-		
+				
 		var stats = this.stats;
-		
-		//var pick = Math.floor(Math.random() * positions.length);
 		
 		console.log("Positions Calculated: " + stats);
 		console.log("Time taken (s): " + (Date.now() - start)/1000);
-		
-		//score[1] = positions[pick];
 		
 		let best = score[1];
 		
@@ -72,20 +44,19 @@ class AI {
 		let type = best.prevMove.type;
 		let cords = best.prevMove.cords;
 		let optimalMove = new Move(piece, cords, type);
-		
-		//for (let i = 0; i < positions.length; i ++) {
-		//	 
-        console.log(best.toString());
-		//}
-		
+				
 		return optimalMove;
 	}
-	
+
+	// refreshes the current fields within the class
 	update(newPos) {
 		this.position = newPos;
 		this.stats = 0;
 	}
 
+	// this function takes a position and
+	// applies a move to it to help the 
+	// algorithm see the outcome of that move
 	updatePosboard(position, move) {
 
 		let board = position.posBoard;
@@ -98,12 +69,7 @@ class AI {
 		let my = cords[1];
 		let piece = board[py][px];
 		position.prevMove = new Move(piece, [mx, my], type);
-		//console.log(move.toString());
-		// console.log("**********************************");
-		// console.log(position.toString());
-		// console.log(move.toString());
 		
-		//position.turn = !position.turn;
 		
 		if (piece.color === "B") {
 			position.turn = true;
@@ -125,11 +91,6 @@ class AI {
 		
 		if (type) {
 			var attacked = board[Math.round((py + my) / 2)][Math.round((px + mx) / 2)];
-			  // console.log(position.toString());
-			  // console.log(position.prevMove.toString());
-			  // console.log(px + " " + py);
-			  // console.log(mx + " " + my);
-			  // console.log(attacked);
 			if (attacked.color === "W") {
 				position.wcc --;
 
@@ -158,56 +119,13 @@ class AI {
 			// 	}
 			// }
 		}
-		
-		//console.log(piece.location);
 
 		piece.location = [mx, my];
-		//console.log(position.toString());
-		//px = mx;
-		//py = my;
-		
-		//console.log(piece.location);
-		
-	// setTimeout(function()
-  //   	{
-  //       display(position);
-  //   	}, 1000);
-		
-		// function display(position) {
-		// 	var wcs = position.wcs;
-		// 	var bcs = position.bcs;
-	
-		// 	for (let i = 0; i < bcs.length; i ++) {
-		// 		var newCords = bcs[i].location;
-		// 		var piece = bcs[i];
-		// 		var newX = newCords[0];
-		// 		var newY = newCords[1];
-		// 		piece.source.style.left = (newX * 80) + "px";
-		// 		piece.source.style.top = (newY * 80) + "px";
-				
-		// 	}
-		// 	for (let i = 0; i < wcs.length; i ++) {
-		// 		var newCords = wcs[i].location;
-		// 		var piece = wcs[i];
-		// 		var newX = newCords[0];
-		// 		var newY = newCords[1];
-		// 		piece.source.style.left = (newX * 80) + "px";
-		// 		piece.source.style.top = (newY * 80) + "px";
-				
-		// 	}
-		
-		// }
-		
-		// setTimeout(function()
-  //   	{
-  //       display(this.position);
-  //   	}, 3000);
-		//position.turn = !position.turn;
-		//piece.location[0] = cords[0];
-		//piece.location[1] = cords[1];
-		
 	}
-	
+
+	// this function grades how good a move is
+	// for the ai
+	// the higher the score, the better the move
 	evaluate(position) {
 		var wcc = position.wcc;
 		var bcc = position.bcc;
@@ -227,21 +145,28 @@ class AI {
 
 		return score;
 	}
-	
+
+	// this function is a standart implementation of a minMax algorithm
+	// with alpha beta pruning
+
+	// minmax means that the ai looks at every response for every opponents
+	// response to its own response ..... this goes on for the depth value
+
+	// alpha beta pruning optimises the speed by limiting terrible lines
+	// of possibilities
+	// "why calculate possibilities when there is already a better chain of 
+	// possibilities " -the Ai probably
 	minMax(position, player, depth, alpha, beta) {
-		//console.log(player);
+		
 		this.stats ++;
 		
 		if (depth == 0 || position.gameOver()) {
 			let score = this.evaluate(position);
-			//console.log(position.toString());
-			//console.log(score);
 			return score;
 		}
 	
 		if (player) {
 			var maxEval = -Infinity;
-			//position.turn = !position.turn;
 			var positions = this.getPositions(position);
 			for (let i = 0; i < positions.length; i ++ ) {
 				var ev = this.minMax(positions[i], false, depth - 1, alpha, beta);
@@ -255,7 +180,6 @@ class AI {
 	
 		} else {
 			var minEval = Infinity;
-			//position.turn = !position.turn;
 			var positions = this.getPositions(position);
 			for (let i = 0; i < positions.length; i ++ ) {
 				var ev = this.minMax(positions[i], true, depth - 1, alpha, beta);
@@ -270,11 +194,10 @@ class AI {
 	
 	}
 
+	// this function returns the possible positions
+	// for the current root/input position
 	getPositions(position) {
 		var turn = position.turn;
-		
-		//console.log(turn);
-		
 		var positions = [];
 		
 		let possibleMovess = allMovesPossible(turn, position);
@@ -283,31 +206,16 @@ class AI {
 			positions.push(_.cloneDeep(position));
 			positions[i].prevMove = (_.cloneDeep(positions[i].prevMove));
 		}
-		//console.log(possibleMovess[4].toString());
 		
 		for (let i = 0; i < possibleMovess.length; i++) {
-			//console.log("passed0.1");
-			//console.log(possibleMovess[i].toString());
-			
-			//console.log("passed0.2");
-			
 			let current = positions[i];
-			
-			//console.log("passed0.3");
-			//console.log(current.toString());
-		
-			//console.log("**********************************");
-			//console.log(current.toString());
-			//console.log(possibleMovess[i].toString());
-			this.updatePosboard(current, possibleMovess[i]);
-			//console.log(current.toString());
-			
+			this.updatePosboard(current, possibleMovess[i]);		
 		}
-
-		//console.log("******************************************");
 		
 		return positions;
-			 
+
+		// this function compiles all of the possible moves
+		// for all of the player's pieces
 		function allMovesPossible(side, position) {
 			var wcs = position.wcs;
 			var bcs = position.bcs;
@@ -338,18 +246,13 @@ class AI {
 					}
 				}
 			}
-	
-			//console.log(allMoves.length);
-			
-			// 	for (var j = 0; j < allMoves.length; j ++) {
-			 //		console.log(allMoves[j].toString());
-			 //	}
-			
-			//console.log(allMoves[4].toString());
 			
 			return allMoves;
 		}
-		
+
+		// this function compiles a list of all
+		// the moves that a singular piece can do
+		// in the given position
 		function possibleMoves(piece, position) {
 			var moves = [];
 			var board = position.posBoard;
@@ -358,7 +261,11 @@ class AI {
 			var x = location[0];
 			var y = location[1];
 			var king = piece.king;
-			
+
+			// cursed code, I know   :)
+			// basically goes through every move
+			// a piece can make and only adds it to
+			// the posibilities if its legal in the current scenario
 			if (color === "W" || king) {
 				if (x+1 < 8 && y-1 > -1 && board[y-1][x+1] == null) {
 					moves.push(new Move(piece, [x+1, y-1], false));
@@ -396,10 +303,6 @@ class AI {
 				}
 			}
 			
-			//console.log(moves.length);
-			 // for (let i = 0; i < moves.length; i ++) {
-			 //  	console.log(moves[i].toString()); 
-			 //  }
 			return moves;
 		}
 		

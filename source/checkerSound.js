@@ -1,3 +1,7 @@
+// the checker sound class is quite simple
+// it is responsible for all of the sounds that
+// one hears while playing.
+
 class checkerSound {
 	constructor() {
 		this.start = document.getElementById("startAUD");
