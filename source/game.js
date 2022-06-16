@@ -165,7 +165,7 @@ function flipFlopAI() {
 		bot = true;
 		if (!turn) {
 			ai.update(posBoard);
-			setTimeout(function(){aiMove();}, 100);
+			setTimeout(function(){aiMove();}, 500);
 		}
 		
 	} else {
@@ -598,7 +598,7 @@ function turnSwitch() {
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
-		setTimeout(function(){aiMove();}, 100);
+		setTimeout(function(){aiMove();}, 500);
 	}
 }
 	

@@ -74,10 +74,10 @@ body {
 
 .timer {
 	font-family: sans-serif;
-	text-emphasis: bold;
 	font-size: 30px;
 	text-align: right;
 	color: white;
+	font-weight: bold;
 }
 
 .white_checker {
@@ -277,7 +277,7 @@ label {
 #optitle {
 	margin: 10px;
 	display: flex;
-	justify: center;
+	justify-content: center;
 }
 .option {
 	margin: 13px;

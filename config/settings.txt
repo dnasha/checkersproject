@@ -1,7 +1,0 @@
-// Settings Notation = value + . //
-
-time_black = 60.
-time_white = 60.
-turn = true.
-forced_moves = true.
-theme = default.
