@@ -1,8 +1,11 @@
-// the checker piece
+// the checker piece class
+// represents each checker
+// it can construct, compare, stringify, and index checkers
+
 class Checker {
 	constructor(location, color, source, king, index) {
 		// collumn, row
-		//[x,y]
+		// [x,y]
 		this.location = location;
 		this.color = color;
 		this.source = source;
@@ -14,7 +17,7 @@ class Checker {
 	toString() {
 		return this.color + " " + this.king;
 	}
-
+	
 	equals(piece) {
 		if (piece.location[0] == this.location[0] &&
 		   piece.location[1] == this.location[1] &&
@@ -26,6 +29,7 @@ class Checker {
 		}
 	}
 
+	// returns whether the piece is white or not
 	type() {
 		if (this.color === "W"){
 			return true;

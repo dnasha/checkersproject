@@ -1,3 +1,8 @@
+// the move class is used to create, compare, and stringify moves
+// that a piece or player or position can make
+
+// moves include the piece that will move, the type of move that it will make,
+// and where it would end up after the move
 class Move {
 	constructor (piece, cords, type) {
 		this.piece = piece;

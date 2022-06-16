@@ -1,3 +1,6 @@
+// this script is responsible for the behavior of the menu
+// that lets players change the visual theme of the game/page
+
 let cog = document.getElementById("cog");
 let menu = document.getElementById("menu");
 let elsewhere = document.getElementById("content");
@@ -20,6 +23,7 @@ let forest = document.getElementById("forest");
 let pink = document.getElementById("pink");
 let ua = document.getElementById("ukraine");
 
+// click listeners
 cog.addEventListener("click", function(){flipFlopShow();});
 elsewhere.addEventListener("click", function(){displayed = true; flipFlopShow();});
 
@@ -33,6 +37,7 @@ forest.addEventListener("click", function(){foresty();});
 pink.addEventListener("click", function(){pinky();});
 ua.addEventListener("click", function(){ukraine();});
 
+// controlls the visibility of the menu
 function flipFlopShow() {
 	if (displayed) {
 		displayed = false;
@@ -42,6 +47,10 @@ function flipFlopShow() {
 		menu.style.visibility = "visible";
 	}
 }
+
+// every function from this point on just
+// changes style values of elements to 
+// effectively change the visual theme of the page
 
 function dark() {
 	body.style.backgroundColor = "rgb(47, 46, 46)";

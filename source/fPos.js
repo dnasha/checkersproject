@@ -1,12 +1,13 @@
-/*
-+---+
-|   |
-+---+
-*/
 import {Checker} from "./checker.js";
 import {Move} from "./move.js";
 
-// computer representation of the position
+// fpos stands for fysical (physical) position
+
+// the fpos class is an
+// object/mathematical representation of the game state/position/board data
+
+// it is practically a collection of data that powers 90% of the 
+// algorithims within this project
 class Position {
 	constructor(wcs, bcs, posBoard, wkc, bkc, wcc, bcc, moveCount, turn, prevMove) {
 		this.wcs = wcs;
@@ -50,6 +51,8 @@ class Position {
 	// deep copies the current self
 	// by expanding objects to the primitive type level
 	// and reassigning everything to a copy
+	// quite useless given that it got replaced by lodash
+	// in the recent most checkpoint
 	copy() {
 		var tempWCS = this.wcs;
 		var tempBCS = this.bcs;
@@ -131,6 +134,9 @@ class Position {
 		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn, nprevMove);
 	}
 
+	// checks if the current position has a game over.
+	// it doesn't incorporate every win condition like the game class does
+	// but it is good enough to incentivise the AI to make the game over/win.
 	gameOver() {
 		if (this.wpc == 0 || this.bpc == 0) {
 			return true;

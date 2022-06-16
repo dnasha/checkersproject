@@ -8,6 +8,17 @@ import {PieceTracker} from "./pieceTracker.js";
 
 // Developed by Dan Sharan
 
+// the game script is the heart of the program
+// it is what ties everything together and lets
+// people play checkers against one another or
+// an ai
+
+// it is also in control of many other
+// functions that can't be put in a class such as the
+// timers
+
+// it carries out both, the setup and play of the game
+
 // ***************global vars***************
 
 //audio 
@@ -52,7 +63,6 @@ var bKingCount = 0;
 
 // singular elements
 var playArea = document.getElementById("board");
-//var turnText = document.getElementById("turn");
 var resetButton = document.getElementById("reset");
 var forcedLaw = document.getElementById("forcedLaw");
 
@@ -68,9 +78,12 @@ var holding = false;
 // false = black   true = white
 var turn = true;
 
+// started the game or not
 var started = false;
 
+// previous move
 var prevMove = null;
+
 // arrays of checker objects
 var wcs = [];
 var bcs = [];
@@ -86,24 +99,19 @@ var gameOver = false;
 var moveCount = 0;
 var winner = null;
 
+// visual position
 var vp;
 
+// variables relating to the forced attack rule
 var forcedMoves = [];
 var forced = false;
-
-//var jumper;
-//undo moves
-//var undoButton = document.getElementById("undo");
-//var redoButton = document.getElementById("redo");
-//var prevMoves = [];
-//var undoPos = 0;
 
 // ai
 var ai;
 var bot = false;
 let botCondition = document.getElementById("botMode");
 
-// timer
+// timers
 var whiteSeconds = 180;
 var blackSeconds = 180;
 //var whiteSeconds = 31536003;
@@ -114,9 +122,13 @@ var timerBlack = document.getElementById("timerBlack");
 
 var whitePause = false;
 var blackPause = false;
+
 // ***************setup functions***************
 
-// setup
+// start - runs through other classes and functions
+// to turn on audio, the visuals, click listeners,
+// game logic, game loop, and so much more
+
 window.onload = function start() {
 
 	vp = new vPos(tiles, bTiles, wCheckers, bCheckers, wPieceCount, bPieceCount);
@@ -156,10 +168,10 @@ window.onload = function start() {
 
 	
 	ai = new AI(basePosition);
-	//prevMoves.push(basePosition);
-	//console.log(basePosition.toString());
 }
 
+// this function determines whether the AI is on or not,
+// based on the option checkbox
 function flipFlopAI() {
 	if (botCondition.checked) {
 		bot = true;
@@ -236,7 +248,7 @@ function clickListeners() {
 	
 	resetButton.addEventListener("click", function(){resetGame();});
 	clickListenersBlack();
-	//clickListenersTimeTravel();
+	
 }
 
 // adds click listeners to black pieces
@@ -250,16 +262,10 @@ function clickListenersBlack() {
 	
 }
 
-/*
-function clickListenersTimeTravel() {
-	undoButton.addEventListener("click", function(){undo();});
-	redoButton.addEventListener("click", function(){redo();});
-}
-*/
-
 // ***************logic functions***************
 
 // if a checker is clicked
+// then this function "activates it"
 function clicked(checker) {
 	if (!gameOver) {
 		if (holding) {
@@ -277,7 +283,9 @@ function clicked(checker) {
 
 }
 
-// activates a piece visually
+// activates a piece visually and sets it as the held piece
+// also finds and displays indicators for possible moves for the activated
+// piece
 function activatePiece(checker) {
 	if (!started) {
 		timer(true);
@@ -313,16 +321,6 @@ function activatePiece(checker) {
 		forced = false;
 		forcedMoves = [];
 	}
-	/*
-	var pm = possibleMoves(held);
-	
-	for (let i = 0; i < pm.length; i ++) {
-		console.log(pm[i].toString());
-	}
-	for (let i = 0; i < forcedMoves.length; i ++) {
-		console.log(forcedMoves[i].toString());
-	}
-	*/
 }
 
 // resets the held piece
@@ -337,7 +335,6 @@ function resetHeld() {
 	}
 	held = null;
 	holding = false;
-	//jumper = null;
 	playArea.style.cursor = "-webkit-grab";
 	resetInds();
 }
@@ -381,17 +378,11 @@ function aiMove() {
 	
 	holding = true;
 	
-	//console.log(ai.position.toString());
 	ai.update(basePosition);
-	//console.log(ai.position.toString());
 	
 	var moveAI = ai.getMove();
 	
-	//console.log(ai.position.toString());
-	
 	held = bcs[moveAI.piece.index];
-	
-	console.log(moveAI);
 	
 	var attacking = moveAI.type;
 	var cords = moveAI.cords;
@@ -403,22 +394,16 @@ function aiMove() {
 
 	let tX = (pX + mX) / 2;
 	let tY = (pY + mY) / 2;
-	
-	// console.log(pX);
-	// console.log(pY);
-	// console.log(mX);
-	// console.log(mY);
-	
+
 	blackSeconds -= Math.ceil((Date.now() - start)/1000);
 	
 	if (attacking) {
 		attack(tX, tY);
 	} 
 	move(cords);
-	//console.log(basePosition.toString());
 	ai.update(basePosition);
 }
-// checks if a move is valid
+// checks if a move is valid/legal
 function isValidMove(move, piece, theory) {
 	if (!holding) {
 		return false;
@@ -498,13 +483,9 @@ function move(newCords) {
 		crowned = piece.king;
 	}
 	
-	//console.log(basePosition.toString());
-	
 	if (forced || attackPlayed && turn == basePosition.prevMove.piece.type()) {
 
-		//console.log(forced);
 		forcedAttack();
-		//console.log(forced);
 
 		var temp = [];
 		forced = false;
@@ -522,8 +503,6 @@ function move(newCords) {
 		forced = false;
 		forcedMoves = [];
 	}
-	//console.log(forced);
-	//console.log(forcedMoves);
 	
 	resetInds();
 	indicate(held);
@@ -536,13 +515,12 @@ function move(newCords) {
 	attackPlayed = false;
 }
 
-// switches the turn
+// switches the turn of the game
 function turnSwitch() {
-	//console.log(basePosition.toString());
+	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
 	
 	moveCount ++;
-	//undoPos = moveCount;
 	
 	if (moveCount >= 20) {
 		checkWin();
@@ -573,28 +551,7 @@ function turnSwitch() {
 		
 		timer(turn);
 	
-	//console.log(forced);
-	//console.log(forcedMoves);
-	
-	//prevMoves.push(basePosition);
-	/*
-	if (turn) {
-		turnText.innerHTML = "Whites turn...";
-		turnText.style.color = "white";
-		turnText.style.webkitTextStrokeWidth = "2px";
-		turnText.style.webkitTextStrokeColor = "black";
-
-	} else {
-		turnText.innerHTML = "Blacks turn...";
-		turnText.style.color = "black";
-		turnText.style.webkitTextStrokeWidth = "1px";
-		turnText.style.webkitTextStrokeColor  = "white";
-	}
-	*/
-	
 	basePosition = new Position(wcs, bcs, posBoard, wKingCount, bKingCount, wPieceCount, bPieceCount, moveCount, turn, prevMove);
-	
-	//console.log(basePosition.toString());
 	
 	if (!turn && bot) {
 		ai.update(posBoard);
@@ -604,11 +561,10 @@ function turnSwitch() {
 	
 }
 
-// checks if a piece is a king 
+// checks if a piece is a king now
 // and appoints it if it is one
 function checkIfKing(piece) {
-	//console.log(piece);
-	//console.log(piece.location);
+	
 	if (!piece.king) {
 		if (piece.color === "W" && piece.location[1] == 0) {
 			crownPiece(piece);
@@ -624,7 +580,8 @@ function checkIfKing(piece) {
 	} 
 }
 
-// turns a piece into a king
+// turns a piece into a king visually and updates
+// the king count for that side/player
 function crownPiece(piece) {
 	piece.king = true;
 	if (piece.color === "B") {
@@ -636,8 +593,7 @@ function crownPiece(piece) {
 	}
 }
 
-// updates visual and mathematical
-// piece position
+// checks to see if an attack is legal
 function checkAttack(tx, ty, px, py, theory) {
 	
 	var targetX = (tx+px)/2;
@@ -654,8 +610,6 @@ function checkAttack(tx, ty, px, py, theory) {
 	} else if (!turn && type === "B") {
 		return false;
 	}
-	//whitePause = true;
-	//blackPause = false;
 
 	if (posBoard[py][px].king && Math.abs(tx-px) == 2 && Math.abs(ty-py) == 2) {
 		if (posBoard[targetY][targetX] == null) {
@@ -719,7 +673,7 @@ function attack(tX, tY) {
 	return true;
 }
 
-// indicates possible moves
+// indicates possible moves visually
 function indicate(moves) {
 
 	var indicated = [];
@@ -776,6 +730,8 @@ function possibleMoves(piece) {
 	return moves;
 }
 
+// function that is practically a custom
+// .contains function or .includes function for arrays
 function hasMove(move) {
 	for (let i = 0; i < forcedMoves.length; i ++) {
 		if (forcedMoves[i].equals(move)) {
@@ -785,13 +741,15 @@ function hasMove(move) {
 	return false;
 }
 
-// resets move indicators
+// resets/hides move indicators
 function resetInds() {
 	for (let i = 0; i < inds.length; i ++) {
 		inds.item(i).style.visibility = "hidden";
 	}
 }
 
+
+// checks if there is a winner
 function checkWin() {
 	
 	var wms = allMovesPossible(true);
@@ -811,7 +769,6 @@ function checkWin() {
 			bmc ++;
 		}
 	}
-	//console.log(wmc + " " + bmc);
 	
 	if (wPieceCount == 0) {
 		winner = "b";
@@ -833,6 +790,7 @@ function checkWin() {
 	}
 }
 
+// stops the game fully
 function stopGame() {
 	whitePause = true;
 	blackPause = true;
@@ -846,16 +804,11 @@ function stopGame() {
 	resetButton.style.visibility = "visible";
 }
 
+// resets the game to its initial state
+// if the player chooses to play again after they've won (or lost)
 function resetGame() {
 	
 	resetHeld();
-	
-	/*
-	turnText.innerHTML = "Whites turn...";
-	turnText.style.color = "white";
-	turnText.style.webkitTextStrokeColor = "black";
-	turnText.style.visibility = "visible";
-	*/
 	
 	turn = true;
 	held = null;
@@ -925,6 +878,8 @@ function resetGame() {
 	resetButton.style.visibility = "hidden";
 }
 
+// gets all of the move possible for a side
+// by combining all of the moves possible for each piece on that side
 function allMovesPossible(side) {
 	var prevTurn = turn;
 	var allMoves = [];
@@ -945,19 +900,13 @@ function allMovesPossible(side) {
 		}
 	}
 	
-	/*
-	for (var i = 0; i < allMoves.length; i ++) {
-		for (var j = 0; j < allMoves[i].length; j ++) {
-			console.log(allMoves[i][j].toString());
-		}
-	}
-	*/
-	
 	turn = prevTurn;
 	
 	return allMoves;
 }
 
+// checks if there is a forced attack present within the current
+// game position
 function forcedAttack() {
 	var moves;
 	
@@ -984,6 +933,7 @@ function forcedAttack() {
 	}
 }
 
+// finds whether a specific piece is obligated/forced to attack
 function forcedPiece(checker) {
 	for (let i = 0; i < forcedMoves.length; i ++) {
 		if (forcedMoves[i].piece.equals(checker)) {
@@ -992,44 +942,8 @@ function forcedPiece(checker) {
 	}
 	return false;
 }
-/*
-function undo() {
-	undoPos = undoPos--;
-	basePosition = prevMoves[undoPos];
-	loadPos();
-}
 
-function redo() {
-	if (undoPos != 0 && undoPos < prevMoves.length - 1) {
-		basePosition = prevMoves[undoPos++];
-	}
-	loadPos();
-}
-
-function loadPos() {
-	
-	turn = basePosition.turn;
-	posBoard = basePosition.posBoard;
-	moveCount = basePosition.moveCount;
-	wcs = basePosition.wcs;
-	bcs = basePosition.bcs;
-	wPieceCount = basePosition.wpc;
-	bPieceCount = basePosition.bpc;
-	wKingCount = basePosition.wkc;
-	bKingCount = basePosition.bkc;
-	
-	for (let i = 0; i < wcs; i ++) {
-		wcs[i].piece.style.left = (wcs[i].location[0] * 80) + "px";
-		wcs[i].piece.style.top = (wcs[i].location[1] * 80) + "px";
-	}
-	
-	for (let i = 0; i < wcs; i ++) {
-		bcs[i].piece.style.left = (bcs[i].location[0] * 80) + "px";
-		bcs[i].piece.style.top = (bcs[i].location[1] * 80) + "px";
-	}
-}
-*/
-
+// as the name implies, this is obviously a timer
 function timer(type) {
 	
 	var interval = 1000;
@@ -1044,6 +958,7 @@ function timer(type) {
 	}
 	
 
+	// recursive count down function for the white side
 	function whiteStep() {
 		var drift = Date.now() - expected;
 
@@ -1069,6 +984,7 @@ function timer(type) {
 		
 		var output = "";
 
+		// unit conversion
 		if (years > 0) {
 			output += years + ";";
 		} 
@@ -1090,16 +1006,17 @@ function timer(type) {
 		}
 		
 		output += secs;
-		
+
+		// visual truncation
 		var size = output.length;
 		size -= 4;
 		size = size * 15 + 80;
 		timerWhite.style.width = size + "px"; 
-		//timerWhite.style.marginLeft = 640 - size + "px";
 		
 		timerWhite.innerHTML = output;
 		expected += interval;
-		
+
+		//win condition
 		if (whiteSeconds === 0) {
 			whitePause = true;
 			winner = "b";
@@ -1107,14 +1024,18 @@ function timer(type) {
 			sound.winS();
 			stopGame();
 		}
+		
+		// recursion break
 		if (!whitePause && current == moveCount) {
     		setTimeout(whiteStep, Math.max(0, interval - drift));
 		}
 	}
-	
+
+	// recursive count down function for the black side
 	function blackStep() {
+
 		var drift = Date.now() - expected;
-		
+
 		if (drift > interval / 4) {
 			drift = 0;
 		}
@@ -1135,7 +1056,8 @@ function timer(type) {
 		var secs = Math.round(blackSeconds % 60);
 		
 		var output = "";
-
+		
+		// unit converter
 		if (years > 0) {
 			output += years + ";";
 		} 
@@ -1156,16 +1078,18 @@ function timer(type) {
 		}
 		
 		output += secs;
-
+		
+		// visual truncation
 		var size = output.length;
 		size -= 4;
 		size = size * 15 + 80;
 		timerBlack.style.width = size + "px"; 
-		//timerBlack.style.marginLeft = 640 - size + "px";
 			
 		timerBlack.innerHTML = output;
 		expected += interval;
+		
 
+		// win condition
 		if (blackSeconds === 0) {
 			blackPause = true;
 			winner = "w";
@@ -1173,7 +1097,8 @@ function timer(type) {
 			sound.winS();
 			stopGame();
 		}
-		
+
+		// recursion break
 		if (!blackPause && current == moveCount) {
     		setTimeout(blackStep, Math.max(0, interval - drift));
 		}
