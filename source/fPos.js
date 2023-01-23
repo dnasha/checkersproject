@@ -48,102 +48,96 @@ class Position {
   		return textRep;
   	}
 
-	// deep copies the current self
-	// by expanding objects to the primitive type level
-	// and reassigning everything to a copy
-	// quite useless given that it got replaced by lodash
-	// in the recent most checkpoint
-	copy() {
-		var tempWCS = this.wcs;
-		var tempBCS = this.bcs;
+	// // deep copies the current self
+	// // by expanding objects to the primitive type level
+	// // and reassigning everything to a copy
+	// // quite useless given that it got replaced by lodash
+	// // in the recent most checkpoint
+	// copy() {
+	// 	var tempWCS = this.wcs;
+	// 	var tempBCS = this.bcs;
 		
-		var nwcs = [];
+	// 	var nwcs = [];
 
-		for (let i = 0; i < tempWCS.length; i ++) {
+	// 	for (let i = 0; i < tempWCS.length; i ++) {
 			
-			const x = tempWCS[i].location[0];
-			const y = tempWCS[i].location[1];
+	// 		const x = tempWCS[i].location[0];
+	// 		const y = tempWCS[i].location[1];
 			
-			let king = tempWCS[i].king;
+	// 		let king = tempWCS[i].king;
 			
-			let source = tempWCS[i].source;
+	// 		let source = tempWCS[i].source;
 			
-			nwcs.push(new Checker([x, y], "W", source, king));
-		}
+	// 		nwcs.push(new Checker([x, y], "W", source, king));
+	// 	}
 		
-		var nbcs = [];
+	// 	var nbcs = [];
 
-		for (let i = 0; i < tempBCS.length; i ++) {
+	// 	for (let i = 0; i < tempBCS.length; i ++) {
 			
-			const x = tempBCS[i].location[0];
-			const y = tempBCS[i].location[1];
+	// 		const x = tempBCS[i].location[0];
+	// 		const y = tempBCS[i].location[1];
 			
-			let king = tempBCS[i].king;
+	// 		let king = tempBCS[i].king;
 			
-			let source = tempBCS[i].source;
+	// 		let source = tempBCS[i].source;
 			
-			nbcs.push(new Checker([x, y], "B", source, king));
-		}
+	// 		nbcs.push(new Checker([x, y], "B", source, king));
+	// 	}
 		
-		var nposBoard = [];
+	// 	var nposBoard = [];
 
-		var tempBoard = this.posBoard;
+	// 	var tempBoard = this.posBoard;
 		
-		for (let i = 0; i < tempBoard.length; i ++) {
-			nposBoard.push([]);
+	// 	for (let i = 0; i < tempBoard.length; i ++) {
+	// 		nposBoard.push([]);
 			
-			for (let j = 0; j < tempBoard[i].length; j ++) {
-				var current = tempBoard[i][j];
+	// 		for (let j = 0; j < tempBoard[i].length; j ++) {
+	// 			var current = tempBoard[i][j];
 
-				if (current == null) {
-					nposBoard[i].push(null);
-				} else if (current.color == "W") {
-					nposBoard[i].push(nwcs[tempWCS.indexOf(current)]);
-				} else if (current.color == "B") {
-					nposBoard[i].push(nbcs[tempBCS.indexOf(current)]);
-				}
+	// 			if (current == null) {
+	// 				nposBoard[i].push(null);
+	// 			} else if (current.color == "W") {
+	// 				nposBoard[i].push(nwcs[tempWCS.indexOf(current)]);
+	// 			} else if (current.color == "B") {
+	// 				nposBoard[i].push(nbcs[tempBCS.indexOf(current)]);
+	// 			}
 				
-			}
-		}
+	// 		}
+	// 	}
 
 		
-		let nwkc = this.wkc;
-		let nbkc = this.bkc;
-		let nwcc = this.wcc;
-		let nbcc = this.bcc;
-		let nmoveCount = this.moveCount;
-		let nturn = this.turn;
+	// 	let nwkc = this.wkc;
+	// 	let nbkc = this.bkc;
+	// 	let nwcc = this.wcc;
+	// 	let nbcc = this.bcc;
+	// 	let nmoveCount = this.moveCount;
+	// 	let nturn = this.turn;
 		
-		var tempMove = this.prevMove;
+	// 	var tempMove = this.prevMove;
 
-		var x = tempMove.cords[0];
-		var y = tempMove.cords[1];
-		var type = tempMove.type;
-		var tempPiece = tempMove.piece;
+	// 	var x = tempMove.cords[0];
+	// 	var y = tempMove.cords[1];
+	// 	var type = tempMove.type;
+	// 	var tempPiece = tempMove.piece;
 		
 
-		let xp = tempPiece.location[0];
-		let yp = tempPiece.location[1];	
-		let king = tempPiece.king;
-		let source = tempPiece.source;
-		let color = tempPiece.color;
+	// 	let xp = tempPiece.location[0];
+	// 	let yp = tempPiece.location[1];	
+	// 	let king = tempPiece.king;
+	// 	let source = tempPiece.source;
+	// 	let color = tempPiece.color;
 		
-		var piece =	new Checker([xp, yp], color, source, king);
+	// 	var piece =	new Checker([xp, yp], color, source, king);
 		
-		let nprevMove = new Move(piece, [x,y], type);
-		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn, nprevMove);
-	}
+	// 	let nprevMove = new Move(piece, [x,y], type);
+	// 	return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn, nprevMove);
+	// }
 
 	// checks if the current position has a game over.
 	// it doesn't incorporate every win condition like the game class does
 	// but it is good enough to incentivise the AI to make the game over/win.
-	gameOver() {
-		if (this.wpc == 0 || this.bpc == 0) {
-			return true;
-		}
-
-		return false;
-	}
+	
 }
 
 export {Position}
