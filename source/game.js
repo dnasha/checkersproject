@@ -187,10 +187,11 @@ function flipFlopAI() {
 		bot = true;
 		if (!turn) {
 			ai.update(basePosition);
-			setTimeout(() => {
-				aiMove();
-			}, 500);
+			const debugEl = document.getElementById("aiDebug");
+			if (debugEl) debugEl.innerText = "AI is thinking...";
+			setTimeout(function(){aiMove();}, 500);
 		}
+		
 	} else {
 		bot = false;
 	}
@@ -384,33 +385,43 @@ function checkMove(t) {
 //parses and executes AI moves
 function aiMove() {
 	var start = Date.now();
-
+	
 	resetHeld();
-
+	
 	holding = true;
-
+	
 	ai.update(basePosition);
-
+	
 	var moveAI = ai.getMove();
-
+	
+	const debugEl = document.getElementById("aiDebug");
+	if (debugEl && moveAI) {
+		debugEl.innerText = `AI: Depth 6 | Nodes: ${ai.stats} | Eval: ${ai.lastEval} | Time: ${ai.lastTime.toFixed(3)}s`;
+	}
+	
+	if (!moveAI) {
+		if (debugEl) debugEl.innerText = "AI: No moves available";
+		return;
+	}
+	
 	held = bcs[moveAI.piece.index];
-
+	
 	var attacking = moveAI.type;
 	var cords = moveAI.cords;
+	
+	let mX = moveAI.cords[0];
+	let mY = moveAI.cords[1];
+	let pX = held.location[0];
+	let pY = held.location[1];
 
-	const mX = moveAI.cords[0];
-	const mY = moveAI.cords[1];
-	const pX = held.location[0];
-	const pY = held.location[1];
+	let tX = (pX + mX) / 2;
+	let tY = (pY + mY) / 2;
 
-	const tX = (pX + mX) / 2;
-	const tY = (pY + mY) / 2;
-
-	blackSeconds -= Math.ceil((Date.now() - start) / 1000);
-
+	blackSeconds -= Math.ceil((Date.now() - start)/1000);
+	
 	if (attacking) {
 		attack(tX, tY);
-	}
+	} 
 	move(cords);
 	ai.update(basePosition);
 }
@@ -525,6 +536,8 @@ function move(newCords) {
 		resetHeld();
 	} else {
 		if (!turn && bot) {
+			const debugEl = document.getElementById("aiDebug");
+			if (debugEl) debugEl.innerText = "AI is thinking (double jump)...";
 			setTimeout(() => {
 				aiMove();
 			}, 500);
@@ -594,6 +607,8 @@ function turnSwitch() {
 
 		if (!turn && bot) {
 			ai.update(basePosition);
+			const debugEl = document.getElementById("aiDebug");
+			if (debugEl) debugEl.innerText = "AI is thinking...";
 			setTimeout(() => {
 				aiMove();
 			}, 500);

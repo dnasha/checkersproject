@@ -10,6 +10,8 @@ const blackTile = document.getElementsByClassName("black_square");
 const whiteTile = document.getElementsByClassName("white_square");
 const blackChecker = document.getElementsByClassName("black_checker");
 const whiteChecker = document.getElementsByClassName("white_checker");
+const labels = document.getElementsByTagName("label");
+const aiDebug = document.getElementById("aiDebug");
 
 let displayed = false;
 
@@ -75,16 +77,28 @@ function flipFlopShow() {
 // changes style values of elements to
 // effectively change the visual theme of the page
 
+function setTextColor(color) {
+	for (let i = 0; i < labels.length; i++) {
+		labels.item(i).style.color = color;
+	}
+	if (aiDebug) {
+		aiDebug.style.color = color;
+	}
+}
+
 function dark() {
 	body.style.backgroundColor = "rgb(47, 46, 46)";
+	setTextColor("white");
 }
 
 function light() {
 	body.style.backgroundColor = "rgb(230, 230, 230)";
+	setTextColor("black");
 }
 
 function reset() {
 	body.style.backgroundColor = "rgb(47, 46, 46)";
+	setTextColor("white");
 
 	for (let i = 0; i < 32; i++) {
 		whiteTile.item(i).style.backgroundColor = "rgb(235, 236, 208)";
