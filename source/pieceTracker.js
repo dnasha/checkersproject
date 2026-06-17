@@ -4,7 +4,7 @@
 // of piece count
 
 class PieceTracker {
-	constructor (pieces) {
+	constructor(pieces) {
 		this.pieces = pieces;
 	}
 
@@ -12,20 +12,22 @@ class PieceTracker {
 		var temp = this.pieces;
 
 		var i = 0;
-		while (temp.item(i).style.visibility === "visible" && i < temp.length) {
-			i ++;
+		while (i < temp.length && temp.item(i).style.visibility === "visible") {
+			i++;
 		}
 
-		temp.item(i).style.visibility = "visible";
+		if (i < temp.length) {
+			temp.item(i).style.visibility = "visible";
+		}
 	}
 
 	reset() {
 		var temp = this.pieces;
 
-		for (let i = 0; i < temp.length; i ++) {
+		for (let i = 0; i < temp.length; i++) {
 			temp.item(i).style.visibility = "hidden";
 		}
 	}
 }
 
-export {PieceTracker}
+export { PieceTracker };

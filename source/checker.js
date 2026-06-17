@@ -17,12 +17,16 @@ class Checker {
 	toString() {
 		return this.color + " " + this.king;
 	}
-	
+
 	equals(piece) {
-		if (piece.location[0] == this.location[0] &&
-		   piece.location[1] == this.location[1] &&
-		   piece.color == this.color && piece.source == this.source &&
-		   piece.king == this.king && piece.dead == this.dead) {
+		if (
+			piece.location[0] == this.location[0] &&
+			piece.location[1] == this.location[1] &&
+			piece.color == this.color &&
+			piece.source == this.source &&
+			piece.king == this.king &&
+			piece.dead == this.dead
+		) {
 			return true;
 		} else {
 			return false;
@@ -31,11 +35,11 @@ class Checker {
 
 	// returns whether the piece is white or not
 	type() {
-		if (this.color === "W"){
+		if (this.color === "W") {
 			return true;
-		} 
+		}
 		return false;
 	}
 }
 
-export {Checker}
+export { Checker };

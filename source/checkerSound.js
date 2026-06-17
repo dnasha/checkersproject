@@ -30,7 +30,6 @@ class checkerSound {
 	winS() {
 		this.win.play();
 	}
-	
 }
 
-export {checkerSound}
+export { checkerSound };

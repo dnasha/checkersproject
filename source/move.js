@@ -4,7 +4,7 @@
 // moves include the piece that will move, the type of move that it will make,
 // and where it would end up after the move
 class Move {
-	constructor (piece, cords, type) {
+	constructor(piece, cords, type) {
 		this.piece = piece;
 		this.type = type;
 		this.cords = cords;
@@ -15,9 +15,12 @@ class Move {
 	}
 
 	equals(move) {
-		if (move.piece.equals(this.piece) && move.type ==
-			this.type && move.cords[0] == this.cords[0] 
-			&& move.cords[1] == this.cords[1]) {
+		if (
+			move.piece.equals(this.piece) &&
+			move.type == this.type &&
+			move.cords[0] == this.cords[0] &&
+			move.cords[1] == this.cords[1]
+		) {
 			return true;
 		} else {
 			return false;
@@ -25,4 +28,4 @@ class Move {
 	}
 }
 
-export {Move}
+export { Move };

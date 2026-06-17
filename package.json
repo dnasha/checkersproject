@@ -1,0 +1,14 @@
+{
+  "name": "checkersproject",
+  "version": "1.0.0",
+  "description": "A classic checkers game revived for GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "start": "http-server -p 8080",
+    "lint": "biome lint source/*.js"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "http-server": "^14.1.1"
+  }
+}

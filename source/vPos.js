@@ -4,8 +4,7 @@
 // positions of the checker pieces
 
 class vPos {
-
-	constructor (tiles, bTiles, wCheckers, bCheckers, wPieceCount, bPieceCount) {
+	constructor(tiles, bTiles, wCheckers, bCheckers, wPieceCount, bPieceCount) {
 		this.tiles = tiles;
 		this.bTiles = bTiles;
 		this.wCheckers = wCheckers;
@@ -14,18 +13,15 @@ class vPos {
 		this.bPieceCount = bPieceCount;
 	}
 
-
-	// draws initial board environment 
+	// draws initial board environment
 	layoutBoard() {
-		
 		// aranges the locations of the tiles
 		var leftPrev = 0;
 		var topPrev = 0;
 
-		for (var i = 0; i < 8; i ++) {
-			for (var j = i * 8; j < i * 8 + 8; j ++) {
-				
-				tile = this.tiles.item(j);
+		for (var i = 0; i < 8; i++) {
+			for (var j = i * 8; j < i * 8 + 8; j++) {
+				var tile = this.tiles.item(j);
 
 				tile.style.left = leftPrev + "px";
 				tile.style.top = topPrev + "px";
@@ -36,18 +32,17 @@ class vPos {
 			leftPrev = 0;
 			topPrev += 80;
 		}
-		
 
 		// aranges the locations of the pieces
-		for (var i = 0; i < this.bPieceCount; i ++) {
+		for (var i = 0; i < this.bPieceCount; i++) {
 			var tile = this.bTiles.item(i);
 			var bPiece = this.bCheckers.item(i);
-			
+
 			bPiece.style.left = tile.style.left;
 			bPiece.style.top = tile.style.top;
 		}
 
-		for (var i = 0; i < this.wPieceCount; i ++) {
+		for (var i = 0; i < this.wPieceCount; i++) {
 			var tile = this.bTiles.item(20 + i);
 			var wPiece = this.wCheckers.item(i);
 
@@ -56,4 +51,4 @@ class vPos {
 		}
 	}
 }
-export {vPos}
+export { vPos };

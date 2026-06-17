@@ -1,15 +1,26 @@
-import {Checker} from "./checker.js";
-import {Move} from "./move.js";
+import { Checker } from "./checker.js";
+import { Move } from "./move.js";
 
 // fpos stands for fysical (physical) position
 
 // the fpos class is an
 // object/mathematical representation of the game state/position/board data
 
-// it is practically a collection of data that powers 90% of the 
+// it is practically a collection of data that powers 90% of the
 // algorithims within this project
 class Position {
-	constructor(wcs, bcs, posBoard, wkc, bkc, wcc, bcc, moveCount, turn, prevMove) {
+	constructor(
+		wcs,
+		bcs,
+		posBoard,
+		wkc,
+		bkc,
+		wcc,
+		bcc,
+		moveCount,
+		turn,
+		prevMove,
+	) {
 		this.wcs = wcs;
 		this.bcs = bcs;
 		this.wcc = wcc;
@@ -25,18 +36,18 @@ class Position {
 	toString() {
 		var textRep = "";
 		var posBoard = this.posBoard;
-		
-		for (let i = 0; i < posBoard.length; i ++) {
-			textRep += "+---+---+---+---+---+---+---+---+\n"
-			textRep += "|"
-			for (let j = 0; j < posBoard[i].length; j ++) {
+
+		for (let i = 0; i < posBoard.length; i++) {
+			textRep += "+---+---+---+---+---+---+---+---+\n";
+			textRep += "|";
+			for (let j = 0; j < posBoard[i].length; j++) {
 				if (posBoard[i][j] == null) {
 					textRep += "   |";
 				} else {
-					textRep += " " + posBoard[i][j].color +" |";
+					textRep += " " + posBoard[i][j].color + " |";
 				}
 			}
-			textRep += "\n"
+			textRep += "\n";
 		}
 
 		textRep += "+---+---+---+---+---+---+---+---+\n";
@@ -45,8 +56,8 @@ class Position {
 		textRep += "Black Count: " + this.bcc + "\n";
 		textRep += "Move: " + this.prevMove.toString();
 
-  		return textRep;
-  	}
+		return textRep;
+	}
 
 	// deep copies the current self
 	// by expanding objects to the primitive type level
@@ -56,43 +67,41 @@ class Position {
 	copy() {
 		var tempWCS = this.wcs;
 		var tempBCS = this.bcs;
-		
+
 		var nwcs = [];
 
-		for (let i = 0; i < tempWCS.length; i ++) {
-			
+		for (let i = 0; i < tempWCS.length; i++) {
 			const x = tempWCS[i].location[0];
 			const y = tempWCS[i].location[1];
-			
-			let king = tempWCS[i].king;
-			
-			let source = tempWCS[i].source;
-			
+
+			const king = tempWCS[i].king;
+
+			const source = tempWCS[i].source;
+
 			nwcs.push(new Checker([x, y], "W", source, king));
 		}
-		
+
 		var nbcs = [];
 
-		for (let i = 0; i < tempBCS.length; i ++) {
-			
+		for (let i = 0; i < tempBCS.length; i++) {
 			const x = tempBCS[i].location[0];
 			const y = tempBCS[i].location[1];
-			
-			let king = tempBCS[i].king;
-			
-			let source = tempBCS[i].source;
-			
+
+			const king = tempBCS[i].king;
+
+			const source = tempBCS[i].source;
+
 			nbcs.push(new Checker([x, y], "B", source, king));
 		}
-		
+
 		var nposBoard = [];
 
 		var tempBoard = this.posBoard;
-		
-		for (let i = 0; i < tempBoard.length; i ++) {
+
+		for (let i = 0; i < tempBoard.length; i++) {
 			nposBoard.push([]);
-			
-			for (let j = 0; j < tempBoard[i].length; j ++) {
+
+			for (let j = 0; j < tempBoard[i].length; j++) {
 				var current = tempBoard[i][j];
 
 				if (current == null) {
@@ -102,43 +111,51 @@ class Position {
 				} else if (current.color == "B") {
 					nposBoard[i].push(nbcs[tempBCS.indexOf(current)]);
 				}
-				
 			}
 		}
 
-		
-		let nwkc = this.wkc;
-		let nbkc = this.bkc;
-		let nwcc = this.wcc;
-		let nbcc = this.bcc;
-		let nmoveCount = this.moveCount;
-		let nturn = this.turn;
-		
+		const nwkc = this.wkc;
+		const nbkc = this.bkc;
+		const nwcc = this.wcc;
+		const nbcc = this.bcc;
+		const nmoveCount = this.moveCount;
+		const nturn = this.turn;
+
 		var tempMove = this.prevMove;
 
 		var x = tempMove.cords[0];
 		var y = tempMove.cords[1];
 		var type = tempMove.type;
 		var tempPiece = tempMove.piece;
-		
 
-		let xp = tempPiece.location[0];
-		let yp = tempPiece.location[1];	
-		let king = tempPiece.king;
-		let source = tempPiece.source;
-		let color = tempPiece.color;
-		
-		var piece =	new Checker([xp, yp], color, source, king);
-		
-		let nprevMove = new Move(piece, [x,y], type);
-		return new Position(nwcs, nbcs, nposBoard, nwkc, nbkc, nwcc, nbcc, nmoveCount, nturn, nprevMove);
+		const xp = tempPiece.location[0];
+		const yp = tempPiece.location[1];
+		const king = tempPiece.king;
+		const source = tempPiece.source;
+		const color = tempPiece.color;
+
+		var piece = new Checker([xp, yp], color, source, king);
+
+		const nprevMove = new Move(piece, [x, y], type);
+		return new Position(
+			nwcs,
+			nbcs,
+			nposBoard,
+			nwkc,
+			nbkc,
+			nwcc,
+			nbcc,
+			nmoveCount,
+			nturn,
+			nprevMove,
+		);
 	}
 
 	// checks if the current position has a game over.
 	// it doesn't incorporate every win condition like the game class does
 	// but it is good enough to incentivise the AI to make the game over/win.
 	gameOver() {
-		if (this.wpc == 0 || this.bpc == 0) {
+		if (this.wcc == 0 || this.bcc == 0) {
 			return true;
 		}
 
@@ -146,4 +163,4 @@ class Position {
 	}
 }
 
-export {Position}
+export { Position };
