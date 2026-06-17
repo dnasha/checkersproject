@@ -2,12 +2,13 @@ import {Move} from "./move.js";
 
 // Lightweight state representation for the AI minimax search tree
 class SearchState {
-	constructor(wcs, bcs, board, turn, prevMove) {
+	constructor(wcs, bcs, board, turn, prevMove, lockedPieceIndex = null) {
 		this.wcs = wcs; // [[x, y, king, dead], ...]
 		this.bcs = bcs; // [[x, y, king, dead], ...]
 		this.board = board; // 8x8 grid where cells are null or { side: 'W'|'B', index: number }
 		this.turn = turn; // boolean (true = white, false = black)
 		this.prevMove = prevMove; // { side: 'W'|'B', index: number, cords: [x,y], type: boolean }
+		this.lockedPieceIndex = lockedPieceIndex; // index of the piece forced to double jump, or null
 	}
 }
 
@@ -39,7 +40,7 @@ function toSearchState(position) {
 		};
 	}
 	
-	return new SearchState(wcs, bcs, board, position.turn, prevMove);
+	return new SearchState(wcs, bcs, board, position.turn, prevMove, null);
 }
 
 // Deep clones the lightweight SearchState object in microseconds
@@ -70,7 +71,7 @@ function cloneSearchState(state) {
 		};
 	}
 	
-	return new SearchState(wcs, bcs, board, state.turn, prevMove);
+	return new SearchState(wcs, bcs, board, state.turn, prevMove, state.lockedPieceIndex);
 }
 
 // High-speed move generation for a single piece
@@ -150,6 +151,13 @@ function possibleMoves(side, index, state) {
 // Compiles all legal moves for a side, respecting forced capture rules
 function allMovesPossible(side, state) {
 	const sideChar = side ? 'W' : 'B';
+	
+	// If a piece is locked in a multiple capture sequence, it is the only piece that can move, and it must jump
+	if (state.lockedPieceIndex !== null) {
+		const moves = possibleMoves(sideChar, state.lockedPieceIndex, state);
+		return moves.filter(m => m.type);
+	}
+	
 	const allMoves = [];
 	for (let i = 0; i < 12; i++) {
 		const moves = possibleMoves(sideChar, i, state);
@@ -181,6 +189,21 @@ class AI {
 		this.lastTime = 0;
 	}
 
+	evaluatePosition(position) {
+		const state = toSearchState(position);
+		return this.evaluate(state);
+	}
+
+	getSearchEvaluation(position) {
+		const state = toSearchState(position);
+		const savedStats = this.stats;
+		this.stats = 0;
+		const evalScore = this.minMax(state, 6, -Infinity, Infinity);
+		this.stats = savedStats;
+		this.lastEval = evalScore;
+		return evalScore;
+	}
+
 	// main function that reaches out to the helper methods
 	// to generate the move that the AI wants to make
 	getMove() {	
@@ -196,7 +219,7 @@ class AI {
 		// of outcomes to grade them and pick
 		// the best one
 		for (let i = 0; i < positions.length; i ++) {
-			const temp = this.minMax(positions[i], false, 6, -Infinity, Infinity);
+			const temp = this.minMax(positions[i], 7, -Infinity, Infinity);
 			
 			if (temp > score[0]) {
 				score[0] = temp;
@@ -251,19 +274,21 @@ class AI {
 		piece[1] = my;
 		
 		// Handle king promotion
+		let promoted = false;
 		if (side === 'B') {
-			state.turn = true;
 			if (!piece[2] && my === 7) {
 				piece[2] = true;
+				promoted = true;
 			}
 		} else {
-			state.turn = false;
 			if (!piece[2] && my === 0) {
 				piece[2] = true;
+				promoted = true;
 			}
 		}
 		
-		// Handle capture
+		// Handle capture and double jump checks
+		let doubleJumpPossible = false;
 		if (type) {
 			const ax = Math.round((px + mx) / 2);
 			const ay = Math.round((py + my) / 2);
@@ -277,58 +302,134 @@ class AI {
 				}
 				state.board[ay][ax] = null;
 			}
+			
+			// If not promoted to king on this move, check for double jump
+			if (!promoted) {
+				const nextJumps = possibleMoves(side, index, state).filter(m => m.type);
+				if (nextJumps.length > 0) {
+					doubleJumpPossible = true;
+				}
+			}
+		}
+		
+		if (doubleJumpPossible) {
+			state.lockedPieceIndex = index;
+			// Turn remains the same
+		} else {
+			state.lockedPieceIndex = null;
+			// Switch turn
+			state.turn = !state.turn;
 		}
 	}
 
 	// this function grades how good a move is for the ai
 	// the higher the score, the better the move
-	evaluate(state) {
+	evaluate(state, depth = 0) {
 		let wcc = 0;
 		let bcc = 0;
 		let wkc = 0;
 		let bkc = 0;
 		
+		// Checker advancement
+		let wAdv = 0;
+		let bAdv = 0;
+		// King center control
+		let wCenter = 0;
+		let bCenter = 0;
+		
 		for (let i = 0; i < 12; i++) {
 			const wp = state.wcs[i];
 			if (!wp[3]) {
 				wcc++;
-				if (wp[2]) wkc++;
+				if (wp[2]) {
+					wkc++;
+					// Center control for White King: stay in central coordinates [2,5]
+					if (wp[0] >= 2 && wp[0] <= 5 && wp[1] >= 2 && wp[1] <= 5) {
+						wCenter += 0.1;
+					}
+				} else {
+					// Checker advancement for White non-king: moves up (y goes from 7 to 0)
+					wAdv += 0.05 * (7 - wp[1]);
+				}
 			}
 			const bp = state.bcs[i];
 			if (!bp[3]) {
 				bcc++;
-				if (bp[2]) bkc++;
+				if (bp[2]) {
+					bkc++;
+					// Center control for Black King: stay in central coordinates [2,5]
+					if (bp[0] >= 2 && bp[0] <= 5 && bp[1] >= 2 && bp[1] <= 5) {
+						bCenter += 0.1;
+					}
+				} else {
+					// Checker advancement for Black non-king: moves down (y goes from 0 to 7)
+					bAdv += 0.05 * bp[1];
+				}
 			}
 		}
 		
-		if (wcc === 0 || bcc === 0) {
-			if (state.turn) {
-				return 1000;
-			} else {
-				return -1000;
-			}
+		if (wcc === 0) return 1000 + depth; // Black (AI) wins
+		if (bcc === 0) return -1000 - depth; // White (Player) wins
+		
+		// Check for no legal moves (forced loss by blocking)
+		const moves = allMovesPossible(state.turn, state);
+		if (moves.length === 0) {
+			return state.turn ? 1000 + depth : -1000 - depth; // If White has no moves, Black wins (+1000), and vice versa
 		}
 
-		const score = bcc - wcc + (2 * (bkc - wkc));
+		let score = bcc - wcc + (2 * (bkc - wkc));
+		
+		// Apply positional bonuses
+		score += bAdv - wAdv;
+		score += bCenter - wCenter;
+		
+		// Chebyshev distance endgame hunting/escaping
+		if (bcc > 0 && wcc > 0 && bcc !== wcc) {
+			let sumDistance = 0;
+			let count = 0;
+			for (let i = 0; i < 12; i++) {
+				const bp = state.bcs[i];
+				if (bp[3]) continue;
+				for (let j = 0; j < 12; j++) {
+					const wp = state.wcs[j];
+					if (wp[3]) continue;
+					const dist = Math.max(Math.abs(bp[0] - wp[0]), Math.abs(bp[1] - wp[1]));
+					sumDistance += dist;
+					count++;
+				}
+			}
+			if (count > 0) {
+				const avgChebyshevDistance = sumDistance / count;
+				if (bcc > wcc) {
+					// Black leading: close the distance (hunt)
+					score += 0.05 * (7 - avgChebyshevDistance);
+				} else {
+					// Black losing: increase the distance (escape)
+					score += 0.05 * avgChebyshevDistance;
+				}
+			}
+		}
+		
 		return score;
 	}
 
 	// standard implementation of a minMax algorithm with alpha beta pruning
-	minMax(state, player, depth, alpha, beta) {
+	// uses state.turn dynamically to decide whether to maximize or minimize
+	minMax(state, depth, alpha, beta) {
 		this.stats ++;
 		
 		const isGameOver = this.gameOver(state);
 		
 		if (depth === 0 || isGameOver) {
-			const score = this.evaluate(state);
+			const score = this.evaluate(state, depth);
 			return score;
 		}
 	
-		if (player) {
+		if (state.turn === false) { // Black/AI's turn (Maximizer)
 			let maxEval = -Infinity;
 			const positions = this.getPositions(state);
 			for (let i = 0; i < positions.length; i ++ ) {
-				const ev = this.minMax(positions[i], false, depth - 1, alpha, beta);
+				const ev = this.minMax(positions[i], depth - 1, alpha, beta);
 				maxEval = Math.max(maxEval, ev);
 				alpha = Math.max(alpha, ev);
 				if (beta <= alpha) {
@@ -337,11 +438,11 @@ class AI {
 			}
 			return maxEval;
 	
-		} else {
+		} else { // White/Player's turn (Minimizer)
 			let minEval = Infinity;
 			const positions = this.getPositions(state);
 			for (let i = 0; i < positions.length; i ++ ) {
-				const ev = this.minMax(positions[i], true, depth - 1, alpha, beta);
+				const ev = this.minMax(positions[i], depth - 1, alpha, beta);
 				minEval = Math.min(minEval, ev);
 				beta = Math.min(beta, ev);
 				if (beta <= alpha) {
@@ -366,7 +467,7 @@ class AI {
 		return positions;
 	}
 	
-	// Helper method to check if game is over (no pieces left for either player)
+	// Helper method to check if game is over (no pieces or no legal moves left)
 	gameOver(state) {
 		let wcc = 0;
 		let bcc = 0;
@@ -374,7 +475,10 @@ class AI {
 			if (!state.wcs[i][3]) wcc++;
 			if (!state.bcs[i][3]) bcc++;
 		}
-		return wcc === 0 || bcc === 0;
+		if (wcc === 0 || bcc === 0) return true;
+		
+		const moves = allMovesPossible(state.turn, state);
+		return moves.length === 0;
 	}
 }
 

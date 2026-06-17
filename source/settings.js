@@ -84,6 +84,10 @@ function setTextColor(color) {
 	if (aiDebug) {
 		aiDebug.style.color = color;
 	}
+	const evalLabel = document.getElementById("evalLabel");
+	if (evalLabel) {
+		evalLabel.style.color = color;
+	}
 }
 
 function dark() {

@@ -139,9 +139,8 @@ window.onload = function start() {
 		checkers.item(i).style.visibility = "visible";
 	}
 
-	botCondition.addEventListener("click", () => {
-		flipFlopAI();
-	});
+	botCondition.addEventListener("click", function(){flipFlopAI();});
+	bot = botCondition.checked;
 
 	populateArrays();
 	clickListeners();
@@ -178,6 +177,7 @@ window.onload = function start() {
 	);
 
 	ai = new AI(basePosition);
+	updateEvalBar(0);
 };
 
 // this function determines whether the AI is on or not,
@@ -396,7 +396,7 @@ function aiMove() {
 	
 	const debugEl = document.getElementById("aiDebug");
 	if (debugEl && moveAI) {
-		debugEl.innerText = `AI: Depth 6 | Nodes: ${ai.stats} | Eval: ${ai.lastEval} | Time: ${ai.lastTime.toFixed(3)}s`;
+		debugEl.innerText = `AI: Depth 7 | Nodes: ${ai.stats} | Eval: ${Number(ai.lastEval.toFixed(2))} | Time: ${ai.lastTime.toFixed(3)}s`;
 	}
 	
 	if (!moveAI) {
@@ -427,7 +427,7 @@ function aiMove() {
 }
 // checks if a move is valid/legal
 function isValidMove(move, piece, theory) {
-	if (!holding) {
+	if (!holding && !theory) {
 		return false;
 	}
 
@@ -452,7 +452,7 @@ function isValidMove(move, piece, theory) {
 	) {
 		return true;
 	} else {
-		if (held.king) {
+		if (piece.king) {
 			if (pY + 1 < tY || pY - 1 > tY) {
 				return false;
 			}
@@ -527,6 +527,21 @@ function move(newCords) {
 		forced = false;
 		forcedMoves = [];
 	}
+
+	basePosition = new Position(
+		wcs,
+		bcs,
+		posBoard,
+		wKingCount,
+		bKingCount,
+		wPieceCount,
+		bPieceCount,
+		moveCount,
+		turn,
+		prevMove,
+	);
+	const score = (!turn && bot) ? ai.lastEval : ai.getSearchEvaluation(basePosition);
+	updateEvalBar(score);
 
 	resetInds();
 	indicate(held);
@@ -604,6 +619,9 @@ function turnSwitch() {
 			turn,
 			prevMove,
 		);
+
+		const score = (!turn && bot) ? ai.lastEval : ai.getSearchEvaluation(basePosition);
+		updateEvalBar(score);
 
 		if (!turn && bot) {
 			ai.update(basePosition);
@@ -938,6 +956,7 @@ function resetGame() {
 	timerBlack.style.opacity = 1;
 
 	resetButton.style.visibility = "hidden";
+	updateEvalBar(0);
 }
 
 // gets all of the move possible for a side
@@ -1165,4 +1184,37 @@ function timer(type) {
 			setTimeout(blackStep, Math.max(0, interval - drift));
 		}
 	}
+}
+
+function updateEvalBar(score) {
+	const evalFill = document.getElementById("evalFill");
+	const evalLabel = document.getElementById("evalLabel");
+	if (!evalFill || !evalLabel) return;
+	
+	let percent = 50;
+	let labelText = "Even";
+	
+	if (score > 900) {
+		let plyToMate = 7 - (score - 1000);
+		let movesToMate = Math.ceil(plyToMate / 2);
+		labelText = `M${movesToMate}`;
+		percent = 100;
+	} else if (score < -900) {
+		let plyToMate = 7 - (Math.abs(score) - 1000);
+		let movesToMate = Math.ceil(plyToMate / 2);
+		labelText = `-M${movesToMate}`;
+		percent = 0;
+	} else {
+		percent = 50 + (score * 10);
+		percent = Math.max(5, Math.min(95, percent));
+		
+		if (Math.abs(score) <= 0.1) {
+			labelText = "Even";
+		} else {
+			labelText = (score >= 0 ? "+" : "") + score.toFixed(1);
+		}
+	}
+	
+	evalFill.style.height = `${percent}%`;
+	evalLabel.innerText = labelText;
 }
