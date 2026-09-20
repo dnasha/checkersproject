@@ -1,6 +1,6 @@
 # Astra validation
 
-Validated locally on Windows 11, Intel Core i7-13620H (16 logical CPUs), Node 25.2.1, using the production build beneath `/checkersproject/`. The GitHub workflows use Node 24 LTS. No release was published.
+Validated locally on Windows 11, Intel Core i7-13620H (16 logical CPUs), Node 25.2.1, using the production build beneath `/checkersproject/`. GitHub's Linux runner also passed all checks using Node 24 LTS. Release `astra-v2.0.0` was published successfully to [GitHub Pages](https://dnasha.github.io/checkersproject/) on September 20, 2026 UTC; see the [release record](DEPLOYMENT.md).
 
 ## Automated checks
 
@@ -23,4 +23,4 @@ See [engine measurements](ENGINE.md) and the checked-in raw benchmark report. At
 
 Keyboard behavior, accessible names, live-region structure, contrast and touch events were checked in Chromium. An actual NVDA/VoiceOver listening session, physical iOS/Android play, Firefox/WebKit, browser UI zoom, and installing/updating the PWA on those devices have **not** been manually verified. Narrow viewport tests establish reflow, but do not replace those assistive-technology and device checks.
 
-The live GitHub Pages deployment and its repository settings remain unchanged. The new manual deployment workflow must be run deliberately for a release; local subpath tests do not claim a live deployment happened.
+The live GitHub Pages deployment was verified after publication: both HTML entry points, application JavaScript/CSS, module worker, manifest, service worker and all three knowledge files return HTTP 200. The release workflow reran all 104 unit and 22 browser tests before deploying. The original `main` branch remains unchanged; explicit release tags control publication from `astra-ver`.

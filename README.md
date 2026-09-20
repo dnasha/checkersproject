@@ -2,6 +2,8 @@
 
 A little checkers club, entirely in your browser. A new edition of Dan Sharan's original game, built with TypeScript, HTML and CSS. It runs on GitHub Pages, works offline after preparation, and never needs an account, backend or API key.
 
+[Play Astra Checkers](https://dnasha.github.io/checkersproject/) · [Release and deployment guide](docs/DEPLOYMENT.md)
+
 ## Play
 
 Choose Practice, Challenge or two-player Local play before starting. Practice includes hints and takebacks; Challenge keeps assistance out of the live match. Pick either side, four AI levels, standard American/English rules or optional captures, and untimed, 3+3, 5+3 or 10+5 clocks.
