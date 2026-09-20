@@ -7,6 +7,9 @@ Source branch: `astra-ver`. The original `main` branch is preserved at `50b6935a
 ## Release 2.0.1
 
 - Release tag: `astra-v2.0.1`
+- Source commit: `ffbd80d5bec3cec5583f8c1763a2fb69b3e92879`
+- [Full CI validation](https://github.com/dnasha/checkersproject/actions/runs/35486767131)
+- [Pages release workflow](https://github.com/dnasha/checkersproject/actions/runs/35486830900)
 - Renames the product to Checkers and removes decorative copy and redundant labels.
 - Simplifies the start screen and lesson titles while retaining rules and instructions.
 
