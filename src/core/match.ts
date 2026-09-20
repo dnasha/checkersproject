@@ -276,7 +276,7 @@ function remaining(value: Remaining): Remaining {
 /** Rebuild imported history from legal turns; never trust serialized derived state. */
 export function validateMatch(input: unknown): Match {
 	if (!input || typeof input !== "object")
-		throw new Error("This is not an Astra game.");
+		throw new Error("This is not a Checkers game.");
 	const raw = input as Match;
 	if (raw.version !== 1)
 		throw new Error("This game uses an unsupported save version.");

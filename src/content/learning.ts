@@ -109,7 +109,7 @@ function puzzle(
 export const lessons: Lesson[] = [
 	lesson({
 		id: "movement",
-		title: "1. Your first move",
+		title: "Movement",
 		description: "Men move one square diagonally forward on the dark squares.",
 		instruction: "Move the dark man from square 10 to square 15.",
 		pieces: [
@@ -126,7 +126,7 @@ export const lessons: Lesson[] = [
 	}),
 	lesson({
 		id: "captures",
-		title: "2. Make a capture",
+		title: "Captures",
 		description:
 			"Jump over an adjacent opponent into the empty square beyond it.",
 		instruction:
@@ -146,7 +146,7 @@ export const lessons: Lesson[] = [
 	}),
 	lesson({
 		id: "compulsory",
-		title: "3. Keep jumping",
+		title: "Capture chains",
 		description:
 			"Captures are compulsory, and the same piece must finish its available jumps.",
 		instruction:
@@ -168,7 +168,7 @@ export const lessons: Lesson[] = [
 	}),
 	lesson({
 		id: "kings",
-		title: "4. A king can go back",
+		title: "Kings",
 		description:
 			"A crowned king moves and captures diagonally in both directions.",
 		instruction:
@@ -188,7 +188,7 @@ export const lessons: Lesson[] = [
 	}),
 	lesson({
 		id: "tactics",
-		title: "5. Read the whole route",
+		title: "Choosing captures",
 		description:
 			"When several captures are available, look beyond the first landing.",
 		instruction:
@@ -210,7 +210,7 @@ export const lessons: Lesson[] = [
 	}),
 	lesson({
 		id: "endings",
-		title: "6. Win by closing the door",
+		title: "Winning by blockade",
 		description: "A player with no legal move loses, even with a piece left.",
 		instruction:
 			"Move the dark king from square 6 to square 1 to block the light man.",
@@ -231,7 +231,7 @@ export const lessons: Lesson[] = [
 export const puzzles: Puzzle[] = [
 	puzzle({
 		id: "capture-01",
-		title: "The compulsory detour",
+		title: "Compulsory capture",
 		category: "captures",
 		difficulty: "beginner",
 		pieces: [
@@ -251,7 +251,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "capture-02",
-		title: "Along the rail",
+		title: "Two captures at the edge",
 		category: "captures",
 		difficulty: "beginner",
 		pieces: [
@@ -272,7 +272,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "capture-03",
-		title: "Three in a line",
+		title: "Triple capture",
 		category: "captures",
 		difficulty: "intermediate",
 		pieces: [
@@ -295,7 +295,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "capture-04",
-		title: "Take the longer fork",
+		title: "Capture branches",
 		category: "captures",
 		difficulty: "intermediate",
 		pieces: [
@@ -316,7 +316,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "capture-05",
-		title: "A man takes two crowns",
+		title: "Capturing kings",
 		category: "captures",
 		difficulty: "intermediate",
 		pieces: [
@@ -337,7 +337,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "capture-06",
-		title: "Light clears the staircase",
+		title: "Triple capture and promotion",
 		category: "captures",
 		difficulty: "advanced",
 		side: "light",
@@ -365,7 +365,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "king-01",
-		title: "Look behind you",
+		title: "Backward capture",
 		category: "kings",
 		difficulty: "beginner",
 		pieces: [
@@ -384,7 +384,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "king-02",
-		title: "Change direction",
+		title: "Changing direction",
 		category: "kings",
 		difficulty: "intermediate",
 		pieces: [
@@ -405,7 +405,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "king-03",
-		title: "A full circuit",
+		title: "Four-capture loop",
 		category: "kings",
 		difficulty: "advanced",
 		pieces: [
@@ -442,7 +442,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "king-04",
-		title: "The backward climb",
+		title: "Three backward captures",
 		category: "kings",
 		difficulty: "intermediate",
 		pieces: [
@@ -465,7 +465,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "king-05",
-		title: "Weave across the crown row",
+		title: "King captures at the edge",
 		category: "kings",
 		difficulty: "advanced",
 		pieces: [
@@ -488,7 +488,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "king-06",
-		title: "Light turns the corner",
+		title: "Light king capture chain",
 		category: "kings",
 		difficulty: "advanced",
 		side: "light",
@@ -512,7 +512,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "promotion-01",
-		title: "The final step",
+		title: "Promotion",
 		category: "promotion",
 		difficulty: "beginner",
 		pieces: [
@@ -536,7 +536,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "promotion-02",
-		title: "Crown, then stop",
+		title: "Promotion ends the turn",
 		category: "promotion",
 		difficulty: "intermediate",
 		pieces: [
@@ -555,7 +555,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "promotion-03",
-		title: "Light reaches the top",
+		title: "Promoting light",
 		category: "promotion",
 		difficulty: "intermediate",
 		side: "light",
@@ -577,7 +577,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "promotion-04",
-		title: "Pass the backward temptation",
+		title: "Forward-only captures",
 		category: "promotion",
 		difficulty: "intermediate",
 		pieces: [
@@ -598,7 +598,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "promotion-05",
-		title: "The long road to a crown",
+		title: "Three jumps to promotion",
 		category: "promotion",
 		difficulty: "advanced",
 		pieces: [
@@ -622,7 +622,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "promotion-06",
-		title: "Trade up to a crown",
+		title: "Capture a king and promote",
 		category: "promotion",
 		difficulty: "beginner",
 		side: "light",
@@ -643,7 +643,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "tactics-01",
-		title: "Close the corner",
+		title: "Corner blockade",
 		category: "tactics",
 		difficulty: "beginner",
 		pieces: [
@@ -662,7 +662,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "tactics-02",
-		title: "Count beyond the fork",
+		title: "Comparing capture routes",
 		category: "tactics",
 		difficulty: "advanced",
 		pieces: [
@@ -685,7 +685,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "tactics-03",
-		title: "Choose the working piece",
+		title: "Choosing a capturing piece",
 		category: "tactics",
 		difficulty: "intermediate",
 		pieces: [
@@ -707,7 +707,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "tactics-04",
-		title: "Seal the pocket",
+		title: "Two-king blockade",
 		category: "tactics",
 		difficulty: "intermediate",
 		pieces: [
@@ -727,7 +727,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "tactics-05",
-		title: "Remove the last defenders",
+		title: "Capturing the last pieces",
 		category: "tactics",
 		difficulty: "beginner",
 		pieces: [
@@ -748,7 +748,7 @@ export const puzzles: Puzzle[] = [
 	}),
 	puzzle({
 		id: "tactics-06",
-		title: "Avoid the immediate trap",
+		title: "Avoiding capture",
 		category: "tactics",
 		difficulty: "intermediate",
 		pieces: [

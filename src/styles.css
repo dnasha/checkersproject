@@ -1,4 +1,4 @@
-/* Astra's little clubhouse: all artwork is CSS/SVG, with no font or image requests. */
+/* Checkers — responsive interface and board styles. */
 :root {
 	color-scheme: light;
 	--page: #f7f3ea;
@@ -183,17 +183,16 @@ a svg {
 }
 
 .site-header,
-main,
-.site-footer {
+main {
 	width: min(1200px, calc(100% - 80px));
 	margin-inline: auto;
 }
 .site-header {
-	min-height: 88px;
+	min-height: 76px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 32px;
+	gap: 24px;
 	border-bottom: 1px solid var(--line);
 }
 .brand {
@@ -205,17 +204,9 @@ main,
 }
 .brand > span:last-child {
 	font-family: var(--serif);
-	font-size: 33px;
+	font-size: 30px;
 	letter-spacing: -0.045em;
-	line-height: 0.95;
-}
-.brand-caption {
-	display: block;
-	margin-top: 7px;
-	font-family: "Segoe UI", sans-serif;
-	font-size: 8px;
-	font-weight: 600;
-	letter-spacing: 0.21em;
+	line-height: 1.1;
 }
 .brand-mark {
 	display: grid;
@@ -290,29 +281,8 @@ main,
 .icon-button:hover:not(:disabled) {
 	background: var(--surface-soft);
 }
-.site-footer {
-	display: flex;
-	justify-content: space-between;
-	gap: 20px;
-	padding: 28px 0 30px;
-	margin-top: 52px;
-	border-top: 1px solid var(--line);
-	font-size: 11px;
-	line-height: 1.6;
-	color: var(--muted);
-}
-.site-footer > span:first-child {
-	font-family: var(--serif);
-	font-size: 14px;
-	font-style: italic;
-}
-.site-footer b {
-	font-weight: 400;
-	margin: 0 9px;
-}
 
 .eyebrow,
-.section-number,
 .count-label {
 	font-size: 10px;
 	font-weight: 600;
@@ -324,10 +294,6 @@ main,
 	display: inline-flex;
 	align-items: center;
 	gap: 9px;
-}
-.small-star {
-	color: var(--accent);
-	font-size: 15px;
 }
 .button {
 	display: inline-flex;
@@ -413,118 +379,28 @@ main,
 .small {
 	font-size: 12px;
 }
-
-.hero {
-	display: grid;
-	grid-template-columns: 1.15fr 1fr;
-	align-items: center;
-	gap: 72px;
-	padding: 68px 12px 58px;
+.home-page {
+	max-width: 960px;
+	padding-top: 32px;
+	padding-bottom: 48px;
 }
-.hero h1 {
-	margin: 24px 0 22px;
-	font-size: clamp(48px, 4.9vw, 70px);
+.home-page h1 {
+	margin-bottom: 24px;
+	font-size: 32px;
 }
-.hero-description {
-	font-size: 15px;
-	line-height: 1.8;
-	color: var(--muted);
-}
-.hero-facts {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 21px;
-	margin-top: 26px;
-}
-.hero-facts span {
-	display: flex;
-	gap: 6px;
-	align-items: center;
-	color: var(--muted);
-	font-size: 11px;
-}
-.hero-facts svg {
-	width: 14px;
-	height: 14px;
-	color: var(--accent);
-}
-.hero-board-wrap {
-	position: relative;
-	padding: 20px 22px 32px;
-	width: 100%;
-	max-width: 470px;
-	justify-self: end;
-}
-.hero-board-wrap::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: 50%;
-	background: var(--surface-soft);
-	transform: rotate(12deg) scale(0.84);
-}
-.preview-board {
-	transform: rotate(-7deg);
-	box-shadow:
-		12px 24px 30px #38261b29,
-		0 3px 0 var(--board-edge);
-}
-.board-note {
-	position: absolute;
-	left: 8px;
-	bottom: 0;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	width: max-content;
-	max-width: calc(100% - 20px);
-	padding: 14px 19px;
-	background: var(--surface);
-	border: 1px solid var(--line);
-	border-radius: 8px;
-	box-shadow: var(--shadow);
-}
-.note-icon {
-	display: grid;
-	place-items: center;
-	color: var(--accent);
-}
-.board-note strong,
-.board-note small {
-	display: block;
-}
-.board-note strong {
-	font-size: 12px;
-	font-weight: 600;
-}
-.board-note small {
-	color: var(--muted);
-	font-size: 10px;
-	margin-top: 4px;
-}
-.hero-flourish {
-	position: absolute;
-	color: #a28457;
-	font-size: 36px;
-}
-.flourish-one {
-	top: -10px;
-	right: 4px;
-}
-.flourish-two {
-	bottom: 75px;
-	left: -18px;
-	font-size: 28px;
+.resume-strip .button {
+	flex-shrink: 0;
 }
 .resume-strip {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 15px;
-	max-width: 410px;
-	border-top: 1px solid var(--line);
-	margin-top: 26px;
-	padding-top: 17px;
+	margin: 0 0 20px;
+	padding: 16px;
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	background: var(--surface);
 }
 .resume-strip strong,
 .resume-strip small {
@@ -537,32 +413,31 @@ main,
 	margin-top: 5px;
 }
 .start-section {
-	padding-top: 28px;
-	border-top: 1px solid var(--line);
+	padding-top: 0;
 }
 .section-heading {
 	display: flex;
-	align-items: flex-end;
+	align-items: center;
 	justify-content: space-between;
 	gap: 22px;
-	margin-bottom: 24px;
+	margin-bottom: 16px;
 }
 .section-heading h2 {
-	margin-top: 9px;
-	font-size: 31px;
+	margin-top: 0;
+	font-size: 26px;
 }
 .mode-options {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 16px;
+	gap: 12px;
 }
 .mode-card {
 	display: flex;
 	align-items: center;
-	gap: 15px;
+	gap: 12px;
 	min-width: 0;
 	text-align: left;
-	padding: 22px 20px;
+	padding: 16px;
 	border: 1px solid var(--line);
 	border-radius: 9px;
 	background: var(--surface);
@@ -578,30 +453,18 @@ main,
 	border-color: var(--accent);
 	box-shadow: inset 0 0 0 1px var(--accent);
 }
-.mode-icon {
-	display: grid;
-	place-items: center;
-	width: 35px;
-	height: 40px;
-	flex: 0 0 auto;
-	color: var(--accent);
-}
-.mode-icon svg {
-	width: 26px;
-	height: 26px;
-}
 .mode-card strong,
 .mode-card small {
 	display: block;
 }
 .mode-card strong {
 	font-family: var(--serif);
-	font-size: 21px;
+	font-size: 20px;
 	font-weight: 400;
 }
 .mode-card small {
-	margin-top: 6px;
-	font-size: 11px;
+	margin-top: 5px;
+	font-size: 12px;
 	line-height: 1.6;
 	color: var(--muted);
 }
@@ -619,18 +482,19 @@ main,
 }
 .setup-panel {
 	display: flex;
-	align-items: flex-end;
-	gap: 27px;
-	margin-top: 18px;
-	padding: 22px 23px;
+	align-items: stretch;
+	gap: 20px;
+	margin-top: 16px;
+	padding: 20px;
 	border: 1px solid var(--line);
 	border-radius: 9px;
 	background: var(--surface);
+	flex-direction: column;
 }
 .setup-fields {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1.2fr;
-	gap: 20px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 16px;
 	width: 100%;
 	min-width: 0;
 }
@@ -640,9 +504,9 @@ main,
 	flex-direction: column;
 	gap: 9px;
 	color: var(--muted);
-	font-size: 9px;
+	font-size: 12px;
 	font-weight: 600;
-	letter-spacing: 0.12em;
+	letter-spacing: 0;
 }
 select,
 input:not([type="checkbox"]):not([type="file"]) {
@@ -668,52 +532,7 @@ input:not([type="checkbox"]):not([type="file"]) {
 }
 .start-button {
 	min-width: 146px;
-	margin-bottom: 1px;
-}
-.setup-footnote {
-	margin-top: 14px;
-	text-align: center;
-	color: var(--muted);
-	font-size: 11px;
-}
-.home-bottom {
-	display: grid;
-	grid-template-columns: 1fr 1.1fr 1fr;
-	gap: 54px;
-	padding-top: 48px;
-	margin-top: 42px;
-	border-top: 1px solid var(--line);
-}
-.home-bottom h3 {
-	font-size: 24px;
-	line-height: 1.25;
-	margin: 14px 0 13px;
-}
-.home-bottom p {
-	color: var(--muted);
-	font-size: 12px;
-}
-.home-bottom .text-link {
-	margin-top: 14px;
-}
-.quote-card {
-	padding: 4px 12px 0 30px;
-	border-left: 1px solid var(--line);
-}
-.quote-card > span {
-	font-family: var(--serif);
-	font-size: 48px;
-	line-height: 0.8;
-	color: #aa9575;
-}
-.quote-card blockquote {
-	max-width: 265px;
-	font: italic 23px / 1.35 var(--serif);
-}
-.quote-card p {
-	margin-top: 18px;
-	font-size: 8px;
-	letter-spacing: 0.12em;
+	align-self: flex-end;
 }
 
 .board-frame {
@@ -896,23 +715,26 @@ input:not([type="checkbox"]):not([type="file"]) {
 	outline: 1px solid #e2c47680;
 	outline-offset: -4px;
 }
-.preview-board .piece {
-	width: 74%;
-}
 
 .play-page {
-	padding-top: 25px;
+	padding-top: 24px;
+	padding-bottom: 48px;
 }
 .play-heading {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 22px;
-	margin-bottom: 24px;
+	margin-bottom: 20px;
 }
 .play-heading h1 {
-	margin-top: 7px;
-	font-size: 33px;
+	margin-top: 0;
+	font-size: 30px;
+}
+.match-rules {
+	margin-top: 6px;
+	color: var(--muted);
+	font-size: 12px;
 }
 .game-layout {
 	display: grid;
@@ -1022,14 +844,6 @@ input:not([type="checkbox"]):not([type="file"]) {
 	width: 15px;
 	height: 15px;
 }
-.keyboard-hint {
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	margin-left: auto;
-	color: var(--muted);
-	font-size: 9px;
-}
 .accessible-moves {
 	border-top: 1px solid var(--line);
 	margin-top: 4px;
@@ -1065,7 +879,7 @@ summary {
 .status-card,
 .coach-card,
 .history-card {
-	padding: 22px;
+	padding: 20px;
 	border: 1px solid var(--line);
 	background: var(--surface);
 	border-radius: 9px;
@@ -1075,8 +889,8 @@ summary {
 	border-color: transparent;
 }
 .status-card h2 {
-	font-size: 30px;
-	margin: 15px 0 12px;
+	font-size: 24px;
+	margin: 0 0 10px;
 }
 .status-card > p {
 	color: var(--muted);
@@ -1117,7 +931,13 @@ summary {
 .coach-actions {
 	display: flex;
 	gap: 7px;
-	margin-bottom: 14px;
+}
+#analysis-content:not(:empty) {
+	margin-top: 14px;
+}
+#analysis-content:empty {
+	margin: 0;
+	padding: 0;
 }
 .coach-actions .button {
 	flex: 1;
@@ -1222,11 +1042,12 @@ summary {
 }
 .empty-moves {
 	display: grid;
-	place-items: center;
-	min-height: 72px;
-	text-align: center;
-	font: italic 15px / 1.6 var(--serif);
+	place-items: center start;
+	min-height: 40px;
+	text-align: left;
 	color: var(--muted);
+	font-size: 12px;
+	line-height: 1.6;
 }
 .replay-controls {
 	display: flex;
@@ -1277,22 +1098,6 @@ summary {
 .game-actions svg {
 	width: 14px;
 	height: 14px;
-}
-.club-note {
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
-	gap: 11px;
-	padding: 11px 4px;
-	color: var(--muted);
-}
-.club-note svg {
-	width: 18px;
-	height: 18px;
-	margin-top: 3px;
-}
-.club-note p {
-	font: italic 13px / 1.7 var(--serif);
 }
 .thinking-indicator {
 	display: flex;
@@ -1360,15 +1165,16 @@ summary {
 }
 
 .collection-page {
-	padding-top: 58px;
+	padding-top: 32px;
+	padding-bottom: 48px;
 }
 .page-intro {
 	max-width: 640px;
-	margin-bottom: 52px;
+	margin-bottom: 28px;
 }
 .page-intro h1 {
-	margin: 18px 0 20px;
-	font-size: clamp(40px, 4.7vw, 62px);
+	margin: 0;
+	font-size: 32px;
 }
 .page-intro > p {
 	max-width: 520px;
@@ -1388,7 +1194,7 @@ summary {
 	flex-direction: column;
 	align-items: flex-start;
 	min-width: 0;
-	padding: 25px;
+	padding: 20px;
 	text-align: left;
 	border: 1px solid var(--line);
 	border-radius: 9px;
@@ -1396,39 +1202,49 @@ summary {
 	transition:
 		transform 0.15s,
 		border-color 0.15s;
+	gap: 10px;
 }
 .lesson-card:hover {
 	transform: translateY(-3px);
 	border-color: var(--accent);
 }
-.lesson-number {
+.lesson-heading {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+	gap: 8px;
 	width: 100%;
-	font: 26px var(--serif);
-	color: var(--accent);
-	padding-bottom: 25px;
 }
-.lesson-number svg {
-	width: 17px;
-	height: 17px;
+.completion-label {
+	color: var(--accent);
+	font-size: 11px;
+	font-weight: 600;
+	margin-left: auto;
+	flex-shrink: 0;
+}
+.lesson-number {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 24px;
+	color: var(--accent);
+	height: 24px;
+	font-weight: 600;
+	flex-shrink: 0;
+	font-size: 14px;
+	line-height: 1.6;
 }
 .lesson-card h3 {
-	font-size: 24px;
-	margin-bottom: 12px;
+	font-size: 21px;
+	margin-bottom: 0;
+	min-width: 0;
+	overflow-wrap: anywhere;
 }
 .lesson-card p {
 	font-size: 12px;
 	color: var(--muted);
 }
-.lesson-card .text-link {
-	margin-top: auto;
-	padding-top: 20px;
-	font-size: 11px;
-}
 .puzzle-section {
-	padding-top: 54px;
+	padding-top: 32px;
 }
 .puzzle-grid {
 	display: grid;
@@ -1500,7 +1316,7 @@ summary {
 	display: flex;
 	justify-content: space-between;
 	gap: 12px;
-	margin-bottom: 22px;
+	margin-bottom: 14px;
 }
 .saved-game-header > span:last-child {
 	color: var(--muted);
@@ -1518,15 +1334,15 @@ summary {
 	display: flex;
 	justify-content: space-between;
 	gap: 12px;
-	margin-top: 22px;
+	margin-top: 16px;
 }
 .empty-library {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
-	gap: 18px;
-	padding: 68px 20px;
+	gap: 14px;
+	padding: 36px 20px;
 	border: 1px dashed var(--line);
 	border-radius: 10px;
 }
@@ -1536,7 +1352,7 @@ summary {
 	color: var(--accent);
 }
 .empty-library h2 {
-	font-size: 32px;
+	font-size: 26px;
 }
 .empty-library p {
 	font-size: 13px;
@@ -1549,6 +1365,11 @@ summary {
 	margin: 18px 0;
 	font-size: 12px;
 	color: var(--muted);
+}
+.editor-guidance {
+	color: var(--muted);
+	font-size: 12px;
+	line-height: 1.7;
 }
 .piece-palette {
 	display: flex;
@@ -1574,7 +1395,7 @@ summary {
 	background: var(--accent-soft);
 }
 .status-card .field-label {
-	margin-top: 22px;
+	margin-top: 16px;
 }
 .checkbox-label {
 	display: flex;
@@ -1640,7 +1461,7 @@ input[type="checkbox"] {
 #preferences-form {
 	display: grid;
 	gap: 14px;
-	margin-top: 24px;
+	margin-top: 0;
 }
 #preferences-form .checkbox-label {
 	margin: 0;
@@ -1728,51 +1549,14 @@ input[type="checkbox"] {
 	.game-sidebar {
 		gap: 13px;
 	}
-	.status-card h2 {
-		font-size: 27px;
-		margin-top: 12px;
-	}
 }
 @media (max-width: 1120px) {
 	.offline-tag {
 		display: none;
 	}
-	.hero {
-		gap: 30px;
-		padding-inline: 0;
-	}
-	.hero h1 {
-		font-size: 56px;
-	}
-	.hero-board-wrap {
-		padding-inline: 18px;
-	}
-	.mode-card {
-		padding: 20px 15px;
-		gap: 10px;
-	}
-	.mode-icon {
-		width: 29px;
-	}
-	.setup-panel {
-		gap: 20px;
-		padding: 20px;
-	}
-	.setup-fields {
-		gap: 14px;
-	}
-	.start-button {
-		min-width: 120px;
-	}
-	.home-bottom {
-		gap: 30px;
-	}
 	.game-layout {
 		grid-template-columns: minmax(0, 1fr) 300px;
 		gap: 28px;
-	}
-	.keyboard-hint {
-		display: none;
 	}
 	.puzzle-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1780,8 +1564,7 @@ input[type="checkbox"] {
 }
 @media (max-width: 860px) {
 	.site-header,
-	main,
-	.site-footer {
+	main {
 		width: calc(100% - 48px);
 	}
 	.site-header {
@@ -1790,74 +1573,8 @@ input[type="checkbox"] {
 	.site-header nav {
 		gap: 22px;
 	}
-	.hero {
-		gap: 15px;
-		padding: 45px 0;
-	}
-	.hero h1 {
-		font-size: 44px;
-	}
-	.hero .eyebrow {
-		font-size: 8px;
-		letter-spacing: 0.09em;
-	}
-	.hero-description {
-		font-size: 13px;
-	}
-	.hero-facts {
-		gap: 12px;
-		margin-top: 20px;
-	}
-	.hero-facts span {
-		font-size: 9px;
-	}
-	.board-note {
-		padding: 12px;
-		gap: 8px;
-	}
-	.board-note strong {
-		font-size: 10px;
-	}
-	.board-note small {
-		font-size: 9px;
-	}
-	.mode-card {
-		align-items: flex-start;
-		padding: 18px 13px;
-		gap: 8px;
-	}
-	.mode-icon {
-		display: none;
-	}
-	.mode-card strong {
-		font-size: 19px;
-	}
-	.mode-card small {
-		font-size: 10px;
-	}
 	.radio-mark {
 		margin-top: 4px;
-	}
-	.setup-panel {
-		flex-direction: column;
-		align-items: stretch;
-	}
-	.setup-fields {
-		gap: 16px;
-	}
-	.start-button {
-		align-self: flex-end;
-		min-width: 150px;
-	}
-	.home-bottom {
-		grid-template-columns: 1fr 1fr;
-		gap: 30px;
-	}
-	.quote-card {
-		display: none;
-	}
-	.section-heading h2 {
-		font-size: 28px;
 	}
 	.section-heading > .text-link {
 		font-size: 10px;
@@ -1879,18 +1596,17 @@ input[type="checkbox"] {
 	.history-card {
 		grid-column: 1 / -1;
 	}
-	.game-actions,
-	.club-note {
+	.game-actions {
 		grid-column: 1 / -1;
 	}
 	.game-actions {
 		justify-content: center;
 	}
-	.game-sidebar .status-card:only-child {
+	.editor-guidance {
 		grid-column: 1 / -1;
 	}
-	.keyboard-hint {
-		display: flex;
+	.game-sidebar .status-card:only-child {
+		grid-column: 1 / -1;
 	}
 	.lesson-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1905,10 +1621,14 @@ input[type="checkbox"] {
 		font-size: 8px;
 	}
 }
+@media (max-width: 800px) {
+	.setup-fields {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
 @media (max-width: 600px) {
 	.site-header,
-	main,
-	.site-footer {
+	main {
 		width: calc(100% - 36px);
 	}
 	.site-header {
@@ -1936,61 +1656,11 @@ input[type="checkbox"] {
 		min-height: 48px;
 		font-size: 13px;
 	}
-	.hero {
-		grid-template-columns: 1fr;
-		gap: 32px;
-		padding: 39px 0 36px;
-	}
-	.hero h1 {
-		margin-top: 18px;
-		font-size: clamp(42px, 9.8vw, 57px);
-	}
-	.hero .eyebrow {
-		font-size: 8px;
-		letter-spacing: 0.12em;
-	}
-	.hero-description {
-		font-size: 14px;
-	}
-	.hero-facts {
-		gap: 19px;
-	}
-	.hero-facts span {
-		font-size: 10px;
-	}
-	.hero-board-wrap {
-		width: min(90%, 340px);
-		margin: 0 auto;
-		padding: 15px 15px 35px;
-		justify-self: center;
-	}
-	.hero-board-wrap::before {
-		inset: 0 -6px 6px;
-	}
-	.board-note {
-		left: -3px;
-		max-width: calc(100% + 6px);
-		width: max-content;
-		padding: 12px 14px;
-	}
-	.board-note strong {
-		font-size: 10px;
-	}
-	.hero-flourish.flourish-two {
-		left: -7px;
-	}
-	.start-section {
-		padding-top: 27px;
-	}
 	.section-heading {
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 9px;
 		margin-bottom: 20px;
-	}
-	.section-heading h2 {
-		font-size: 29px;
-		line-height: 1.15;
 	}
 	.section-heading > .text-link {
 		min-height: 36px;
@@ -2000,74 +1670,11 @@ input[type="checkbox"] {
 		grid-template-columns: 1fr;
 		gap: 10px;
 	}
-	.mode-card {
-		align-items: center;
-		gap: 15px;
-		padding: 17px 18px;
-	}
-	.mode-icon {
-		display: grid;
-		width: 31px;
-	}
-	.mode-card strong {
-		font-size: 21px;
-	}
-	.mode-card small {
-		margin-top: 4px;
-		font-size: 11px;
-	}
 	.radio-mark {
 		margin-top: 0;
 	}
-	.setup-panel {
-		padding: 20px 17px;
-		gap: 20px;
-	}
-	.setup-fields {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 19px 16px;
-	}
 	.setup-fields select {
 		font-size: 11px;
-	}
-	.start-button {
-		width: 100%;
-		align-self: stretch;
-	}
-	.setup-footnote {
-		padding-inline: 8px;
-		font-size: 10px;
-		line-height: 1.6;
-	}
-	.home-bottom {
-		grid-template-columns: 1fr;
-		margin-top: 30px;
-		padding-top: 32px;
-		gap: 31px;
-	}
-	.home-bottom > div + div {
-		padding-top: 28px;
-		border-top: 1px solid var(--line);
-	}
-	.home-bottom h3 {
-		font-size: 27px;
-		margin-top: 11px;
-	}
-	.home-bottom p {
-		font-size: 13px;
-	}
-	.site-footer {
-		flex-direction: column;
-		gap: 9px;
-		margin-top: 36px;
-		padding-top: 23px;
-		font-size: 9px;
-	}
-	.site-footer b {
-		margin-inline: 5px;
-	}
-	.site-footer > span:first-child {
-		font-size: 14px;
 	}
 	.play-page {
 		padding-top: 25px;
@@ -2122,9 +1729,6 @@ input[type="checkbox"] {
 		font-size: 10px;
 		gap: 6px;
 	}
-	.keyboard-hint {
-		display: none;
-	}
 	.game-sidebar {
 		grid-template-columns: 1fr;
 	}
@@ -2135,9 +1739,6 @@ input[type="checkbox"] {
 	.coach-card,
 	.history-card {
 		padding: 21px;
-	}
-	.status-card h2 {
-		font-size: 29px;
 	}
 	.status-card > p {
 		font-size: 13px;
@@ -2186,15 +1787,6 @@ input[type="checkbox"] {
 			0 3px 0 #c0aa87,
 			0 4px 4px #1c160a4d;
 	}
-	.collection-page {
-		padding-top: 38px;
-	}
-	.page-intro {
-		margin-bottom: 36px;
-	}
-	.page-intro h1 {
-		font-size: 43px;
-	}
 	.page-intro > p {
 		font-size: 13px;
 	}
@@ -2203,21 +1795,6 @@ input[type="checkbox"] {
 	.library-grid {
 		grid-template-columns: 1fr;
 		gap: 13px;
-	}
-	.lesson-card {
-		padding: 23px;
-	}
-	.lesson-number {
-		padding-bottom: 18px;
-	}
-	.lesson-card h3 {
-		font-size: 26px;
-	}
-	.lesson-card p {
-		font-size: 13px;
-	}
-	.puzzle-section {
-		padding-top: 38px;
 	}
 	.puzzle-card {
 		min-height: 82px;
@@ -2228,12 +1805,6 @@ input[type="checkbox"] {
 	}
 	.count-label {
 		font-size: 10px;
-	}
-	.empty-library {
-		padding: 48px 18px;
-	}
-	.empty-library h2 {
-		font-size: 29px;
 	}
 	.piece-palette {
 		gap: 11px;
@@ -2260,27 +1831,21 @@ input[type="checkbox"] {
 		font-size: 11px;
 		padding: 13px 16px;
 	}
+	.setup-panel {
+		padding: 18px 16px;
+	}
+	.start-button {
+		width: 100%;
+		align-self: stretch;
+	}
+	.lesson-card {
+		padding: 18px;
+	}
 }
 @media (max-width: 360px) {
 	.site-header,
-	main,
-	.site-footer {
+	main {
 		width: calc(100% - 28px);
-	}
-	.hero h1 {
-		font-size: 41px;
-	}
-	.hero-facts {
-		gap: 10px;
-	}
-	.hero-facts span {
-		font-size: 9px;
-	}
-	.hero .eyebrow {
-		font-size: 7px;
-	}
-	.setup-fields {
-		grid-template-columns: 1fr;
 	}
 	.setup-fields select {
 		font-size: 12px;
@@ -2306,6 +1871,9 @@ input[type="checkbox"] {
 	.palette-piece {
 		width: 45px;
 		height: 45px;
+	}
+	.setup-fields {
+		grid-template-columns: 1fr;
 	}
 }
 @media (prefers-reduced-motion: reduce) {

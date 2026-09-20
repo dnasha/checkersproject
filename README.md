@@ -1,8 +1,8 @@
-# Astra Checkers
+# Checkers
 
-A little checkers club, entirely in your browser. A new edition of Dan Sharan's original game, built with TypeScript, HTML and CSS. It runs on GitHub Pages, works offline after preparation, and never needs an account, backend or API key.
+Browser checkers built with TypeScript, HTML and CSS, based on Dan Sharan's original game. Runs on GitHub Pages with offline support and no accounts, backend or API keys.
 
-[Play Astra Checkers](https://dnasha.github.io/checkersproject/) · [Release and deployment guide](docs/DEPLOYMENT.md)
+[Play Checkers](https://dnasha.github.io/checkersproject/) · [Release and deployment guide](docs/DEPLOYMENT.md)
 
 ## Play
 
@@ -47,8 +47,8 @@ To publish from `astra-ver` while preserving `main`, commit and push the tested 
 ```sh
 git switch astra-ver
 git push origin astra-ver
-git tag -a astra-v2.0.1 -m "Release Astra Checkers 2.0.1"
-git push origin astra-v2.0.1
+git tag -a astra-v2.0.2 -m "Release Checkers 2.0.2"
+git push origin astra-v2.0.2
 ```
 
 Use a new tag name for each release. The workflow rebuilds, tests, and deploys the tagged commit. The **Run workflow** button becomes available once this workflow file also exists on the repository's default branch; GitHub requires that for manual dispatch. Release-tag deployment works directly from `astra-ver`.

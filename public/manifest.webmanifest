@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Astra Checkers",
+  "name": "Checkers",
   "short_name": "Checkers",
-  "description": "Your own little checkers club. Play, learn, and explore offline.",
+  "description": "Checkers with computer and local play, lessons, puzzles, and offline support.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

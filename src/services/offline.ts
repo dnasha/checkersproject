@@ -20,9 +20,9 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
 				notice.setAttribute("role", "status");
 				notice.style.cssText =
 					"position:fixed;bottom:16px;left:16px;right:16px;max-width:420px;padding:16px;background:#274c40;color:white;border-radius:12px;z-index:1000;box-shadow:0 4px 24px #0003;font:14px system-ui";
-				notice.append("A new edition is ready. Your game is saved. ");
+				notice.append("Update available. ");
 				const button = document.createElement("button");
-				button.textContent = "Update when ready";
+				button.textContent = "Update";
 				button.style.cssText = "padding:8px;margin-top:8px;cursor:pointer";
 				button.onclick = () => {
 					window.dispatchEvent(new CustomEvent("astra:before-update"));

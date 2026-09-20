@@ -27,9 +27,12 @@ test("every destination reflows without horizontal scrolling", async ({
 				overflow.content,
 				`${width}px ${route}: ${JSON.stringify(overflow)}`,
 			).toBeLessThanOrEqual(overflow.width + 1);
-			if (route === "home" && (width === 390 || width === 1440))
+			if (
+				["home", "learn"].includes(route) &&
+				(width === 390 || width === 1440)
+			)
 				await page.screenshot({
-					path: `test-results/home-${width}.png`,
+					path: `test-results/${route}-${width}.png`,
 					fullPage: true,
 				});
 		}

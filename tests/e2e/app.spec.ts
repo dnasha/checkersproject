@@ -154,18 +154,16 @@ test("an unfinished capture survives import and reload with the same piece locke
 		createState(board),
 	);
 	await page.goto("./#library");
-	await page
-		.locator("#import-file")
-		.setInputFiles({
-			name: "capture.json",
-			mimeType: "application/json",
-			buffer: Buffer.from(JSON.stringify(game)),
-		});
+	await page.locator("#import-file").setInputFiles({
+		name: "capture.json",
+		mimeType: "application/json",
+		buffer: Buffer.from(JSON.stringify(game)),
+	});
 	await page.locator(`[data-action="load:${game.id}"]`).click();
 	await page.locator('[data-square="4"]').click();
 	await page.locator('[data-square="13"]').click();
 	await expect(
-		page.getByText("Keep the capture going.", { exact: true }),
+		page.getByText("Continue capture", { exact: true }),
 	).toBeVisible();
 	await page.reload();
 	await expect(page.locator('[data-square="13"]')).toHaveAttribute(
@@ -188,13 +186,11 @@ test("lessons, puzzles, editor and saved live game remain independent", async ({
 	await page.locator('[data-lesson="0"]').click();
 	await page.locator('[data-square="9"]').click();
 	await page.locator('[data-square="14"]').click();
-	await expect(
-		page.getByText("Beautifully played.", { exact: true }),
-	).toBeVisible();
+	await expect(page.getByText("Solved", { exact: true })).toBeVisible();
 	await page.getByRole("link", { name: "Play", exact: true }).click();
 	await page.locator('[data-action="resume-game"]').click();
 	await expect(page.locator(".move-entry")).toHaveCount(1);
-	await page.getByRole("link", { name: "Studio", exact: true }).click();
+	await page.getByRole("link", { name: "Editor", exact: true }).click();
 	await page.locator('[data-action="editor-starting"]').click();
 	await expect(page.locator("#editor-board .piece")).toHaveCount(24);
 });

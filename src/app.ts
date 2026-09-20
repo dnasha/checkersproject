@@ -162,7 +162,7 @@ const paletteNames = [
 const modeNames: Record<Mode, string> = {
 	practice: "Practice",
 	challenge: "Challenge",
-	local: "Pass & play",
+	local: "Local",
 };
 
 function active(): Match | null {
@@ -266,7 +266,7 @@ function linkedPosition(): GameState | null {
 		return readPositionLink(location.hash);
 	} catch {
 		statusMessage =
-			"This position link is invalid. Create a new position in the studio.";
+			"This position link is invalid. Create a new position in the editor.";
 		return null;
 	}
 }
@@ -282,7 +282,7 @@ function playerName(side: Side, match: Match): string {
 		? `${capital(side)} pieces`
 		: side === match.config.humanSide
 			? "You"
-			: `Astra · ${capital(match.config.difficulty)}`;
+			: `Computer · ${capital(match.config.difficulty)}`;
 }
 function outcomeText(match: Match): string {
 	if (!match.outcome) return "";
@@ -408,19 +408,25 @@ function boardMarkup(
 }
 
 function header(): string {
-	return `<header class="site-header"><a class="brand" href="#home" aria-label="Astra Checkers home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>astra<span class="brand-caption">CHECKERS CLUB</span></span></a><nav aria-label="Main navigation"><a href="#home" ${view === "home" || view === "play" ? 'aria-current="page"' : ""}>Play</a><a href="#learn" ${view === "learn" ? 'aria-current="page"' : ""}>Learn</a><a href="#library" ${view === "library" ? 'aria-current="page"' : ""}>Library</a><a href="#editor" ${view === "editor" ? 'aria-current="page"' : ""}>Studio</a></nav><div class="header-tools"><span class="offline-tag" id="offline-status">${document.documentElement.dataset.offline === "ready" ? "<span></span>Offline ready" : "Made for the love of the game"}</span>${button("preferences", '<span class="sr-only">Appearance and preferences</span>', "icon-button", "settings")}</div></header>`;
-}
-function footer(): string {
-	return `<footer class="site-footer"><span>32 squares. Endless possibilities.</span><span>American checkers <b>·</b> No account required <b>·</b> Yours to play</span></footer>`;
+	return `<header class="site-header"><a class="brand" href="#home" aria-label="Checkers home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Checkers</span></a><nav aria-label="Main navigation"><a href="#home" ${view === "home" || view === "play" ? 'aria-current="page"' : ""}>Play</a><a href="#learn" ${view === "learn" ? 'aria-current="page"' : ""}>Learn</a><a href="#library" ${view === "library" ? 'aria-current="page"' : ""}>Library</a><a href="#editor" ${view === "editor" ? 'aria-current="page"' : ""}>Editor</a></nav><div class="header-tools"><span class="offline-tag" id="offline-status">${document.documentElement.dataset.offline === "ready" ? "<span></span>Offline ready" : ""}</span>${button("preferences", '<span class="sr-only">Settings</span>', "icon-button", "settings")}</div></header>`;
 }
 function homeMarkup(): string {
 	const descriptions: Record<Mode, string> = {
-		practice: "Room to think. Hints when you need them.",
-		challenge: "You, the clock, and your best game.",
-		local: "A good game. Even better company.",
+		practice: "Hints, analysis and untimed undo",
+		challenge: "No assistance during play",
+		local: "Two players on this device",
 	};
-	const preview = createInitialState().board;
-	return `<main class="home-page"><section class="hero"><div class="hero-copy"><span class="eyebrow"><span class="small-star">✦</span> THE TIMELESS GAME, THOUGHTFULLY REMADE</span><h1>A classic game.<br>A sharper <em>mind.</em></h1><p class="hero-description">Slow down. Think ahead. Make your move.<br>Your next great game of checkers starts here.</p><div class="hero-facts"><span>${icon("check")} Free to play</span><span>${icon("check")} Works offline</span><span>${icon("check")} Every skill level</span></div>${live && !live.outcome ? `<div class="resume-strip"><span><strong>Your board is waiting.</strong><small>${modeNames[live.config.mode]} · ${live.history.length} turns played${live.clock.paused ? " · Paused" : ""}</small></span>${button("resume-game", "Resume", "button secondary small", "arrow")}</div>` : ""}</div><div class="hero-board-wrap">${boardMarkup(preview, false, true)}<div class="board-note"><span class="note-icon">${icon("spark")}</span><span><strong>Simple to learn. A lifetime to master.</strong><small>A fresh take on a familiar favorite.</small></span></div><span class="hero-flourish flourish-one" aria-hidden="true">✦</span><span class="hero-flourish flourish-two" aria-hidden="true">✧</span></div></section><section class="start-section" aria-labelledby="start-heading"><div class="section-heading"><div><span class="eyebrow">FIND YOUR RHYTHM</span><h2 id="start-heading">How would you like to play?</h2></div><a class="text-link" href="#learn">New to checkers? Start here ${icon("arrow")}</a></div><div class="mode-options">${(["practice", "challenge", "local"] as Mode[]).map((mode) => `<button type="button" class="mode-card ${config.mode === mode ? "active" : ""}" data-mode="${mode}" aria-pressed="${config.mode === mode}"><span class="mode-icon">${icon(mode === "practice" ? "spark" : mode === "challenge" ? "crown" : "people")}</span><span><strong>${modeNames[mode]}</strong><small>${descriptions[mode]}</small></span><span class="radio-mark"></span></button>`).join("")}</div><form id="setup-form" class="setup-panel"><div class="setup-fields"><label>YOUR PIECES<select name="humanSide" ${config.mode === "local" ? "disabled" : ""}><option value="dark" ${config.humanSide === "dark" ? "selected" : ""}>● Dark · move first</option><option value="light" ${config.humanSide === "light" ? "selected" : ""}>○ Ivory · move second</option></select></label><label>OPPONENT<select name="difficulty" ${config.mode === "local" ? "disabled" : ""}>${(["beginner", "casual", "challenging", "expert"] as Difficulty[]).map((level) => `<option ${level === config.difficulty ? "selected" : ""} value="${level}">${capital(level)}</option>`).join("")}</select></label><label>TIME CONTROL<select name="timeControl">${(["off", "3+3", "5+3", "10+5"] as TimeControl[]).map((time) => `<option value="${time}" ${time === config.timeControl ? "selected" : ""}>${time === "off" ? "Take your time" : `${time.split("+")[0]} min + ${time.split("+")[1]} sec`}</option>`).join("")}</select></label><label>RULES<select name="mandatoryCapture"><option value="true" ${config.mandatoryCapture ? "selected" : ""}>Standard · must capture</option><option value="false" ${!config.mandatoryCapture ? "selected" : ""}>House rule · optional capture</option></select></label></div><button class="button primary start-button" type="submit">Let’s play ${icon("arrow")}</button></form><p class="setup-footnote">${config.mode === "practice" ? "A little guidance goes a long way. Hints, analysis, and untimed undo are available." : config.mode === "challenge" ? "Trust your instincts. Hints and undo are off; analysis unlocks when the game ends." : "Two players, one board. Pass the device and enjoy the game."}</p></section><section class="home-bottom"><div><span class="section-number">01 / LEARN</span><h3>Every expert was a beginner.</h3><p>Six bite-size lessons. Twenty-four puzzles.<br>Build your confidence, one move at a time.</p><a href="#learn" class="text-link">Find your next lesson ${icon("arrow")}</a></div><div><span class="section-number">02 / EXPLORE</span><h3>What if you played it differently?</h3><p>Set up a position, study your games,<br>and discover the move you almost missed.</p><a href="#editor" class="text-link">Open the position studio ${icon("arrow")}</a></div><div class="quote-card"><span aria-hidden="true">“</span><blockquote>The beauty of a move lies in the thought behind it.</blockquote><p>A LITTLE PHILOSOPHY FROM THE CLUB</p></div></section></main>`;
+	return `<main class="home-page"><section class="start-section" aria-labelledby="start-heading">
+    <h1 id="start-heading">New game</h1>
+    ${live && !live.outcome ? `<div class="resume-strip"><span><strong>Current game</strong><small>${modeNames[live.config.mode]} · ${live.history.length} ${live.history.length === 1 ? "turn" : "turns"}${live.clock.paused ? " · Paused" : ""}</small></span>${button("resume-game", "Resume", "button secondary small")}</div>` : ""}
+    <div class="mode-options">${(["practice", "challenge", "local"] as Mode[]).map((mode) => `<button type="button" class="mode-card ${config.mode === mode ? "active" : ""}" data-mode="${mode}" aria-pressed="${config.mode === mode}"><span><strong>${modeNames[mode]}</strong><small>${descriptions[mode]}</small></span><span class="radio-mark"></span></button>`).join("")}</div>
+    <form id="setup-form" class="setup-panel"><div class="setup-fields">
+      <label>Your pieces<select name="humanSide" ${config.mode === "local" ? "disabled" : ""}><option value="dark" ${config.humanSide === "dark" ? "selected" : ""}>Dark · first</option><option value="light" ${config.humanSide === "light" ? "selected" : ""}>Light · second</option></select></label>
+      <label>Difficulty<select name="difficulty" ${config.mode === "local" ? "disabled" : ""}>${(["beginner", "casual", "challenging", "expert"] as Difficulty[]).map((level) => `<option ${level === config.difficulty ? "selected" : ""} value="${level}">${capital(level)}</option>`).join("")}</select></label>
+      <label>Time control<select name="timeControl">${(["off", "3+3", "5+3", "10+5"] as TimeControl[]).map((time) => `<option value="${time}" ${time === config.timeControl ? "selected" : ""}>${time === "off" ? "Untimed" : `${time.split("+")[0]} min + ${time.split("+")[1]} sec`}</option>`).join("")}</select></label>
+      <label>Rules<select name="mandatoryCapture"><option value="true" ${config.mandatoryCapture ? "selected" : ""}>Compulsory captures</option><option value="false" ${!config.mandatoryCapture ? "selected" : ""}>Optional captures</option></select></label>
+    </div><button class="button primary start-button" type="submit">Start game</button></form>
+  </section></main>`;
 }
 
 function playerCard(side: Side, match: Match): string {
@@ -432,17 +438,17 @@ function playerCard(side: Side, match: Match): string {
 }
 function gameStatus(match: Match): { title: string; detail: string } {
 	if (exercise?.solved)
-		return { title: "Beautifully played.", detail: exercise.item.explanation };
+		return { title: "Solved", detail: exercise.item.explanation };
 	if (match.outcome)
 		return {
 			title: match.outcome.winner
 				? `${capital(match.outcome.winner)} wins.`
-				: "An even match.",
+				: "Draw",
 			detail: outcomeText(match).split(". ").slice(1).join(". "),
 		};
 	if (review !== null)
 		return {
-			title: "A moment worth revisiting.",
+			title: "Replay",
 			detail:
 				review < 0
 					? "The starting position."
@@ -450,8 +456,8 @@ function gameStatus(match: Match): { title: string; detail: string } {
 		};
 	if (match.clock.paused)
 		return {
-			title: "Take a little breather.",
-			detail: "The board and clock will be here when you return.",
+			title: "Paused",
+			detail: "",
 		};
 	if (exercise)
 		return {
@@ -463,13 +469,13 @@ function gameStatus(match: Match): { title: string; detail: string } {
 		};
 	if (match.pending)
 		return {
-			title: "Keep the capture going.",
+			title: "Continue capture",
 			detail: "Continue jumping with the same piece.",
 		};
 	if (!canPlay())
 		return {
-			title: "Astra is thinking.",
-			detail: "Finding the next move. Take a moment to look ahead.",
+			title: "Computer thinking",
+			detail: "",
 		};
 	const capture = getLegalTurns(match.state).some((t) => t.captures.length);
 	return {
@@ -480,7 +486,7 @@ function gameStatus(match: Match): { title: string; detail: string } {
 		detail:
 			capture && match.config.mandatoryCapture
 				? "A capture is available. You must take it."
-				: "Choose a piece, then choose where it goes.",
+				: "Select a piece, then a destination.",
 	};
 }
 function analysisMarkup(): string {
@@ -490,16 +496,15 @@ function analysisMarkup(): string {
 	const controls = busy
 		? `<div class="analysis-progress"><p class="muted">${pendingRequest?.purpose === "analysis" ? "Comparing candidate moves" : "Finding a useful hint"}${analysis ? ` · depth ${analysis.depth}` : "…"}</p>${button("play-now", "Show result now", "button secondary small")}</div>`
 		: "";
-	if (!analysis)
-		return `${controls}<p class="muted">A fresh perspective is one click away. Explore a hint or analyze this position.</p>`;
+	if (!analysis) return controls;
 	const advantage =
 		Math.abs(analysis.score) < 20
-			? "The position looks balanced."
-			: `${analysis.score > 0 ? "Dark" : "Ivory"} has an estimated advantage.`;
+			? "Estimated: balanced"
+			: `Estimated advantage: ${analysis.score > 0 ? "Dark" : "Light"}`;
 	const alternatives = analysis.alternatives?.length
 		? `<div class="analysis-alternatives"><p class="eyebrow">CANDIDATE MOVES</p>${analysis.alternatives.map((alternative, i) => `<div class="alternative"><div><strong>${i + 1}. ${notation(alternative.move)}</strong><span>${alternative.score > 0 ? "+" : ""}${(alternative.score / 100).toFixed(2)}</span></div><p>${alternative.pv.slice(0, 5).map(notation).join(" → ")}</p></div>`).join("")}</div>`
 		: "";
-	return `${controls}<div class="analysis-score"><strong>${advantage}</strong><span>${analysis.score > 0 ? "+" : ""}${(analysis.score / 100).toFixed(2)}</span></div><p class="analysis-line">${analysis.pv.length ? `One line to explore: ${analysis.pv.slice(0, 6).map(notation).join(" → ")}` : "No continuation available."}</p>${analysis.move ? `<p class="tactical-fact">${analysis.move.captures.length ? `This move captures ${analysis.move.captures.length} ${analysis.move.captures.length === 1 ? "piece" : "pieces"}.` : "This is a quiet positional move."}${analysis.move.promotion ? " It also earns a king." : ""}</p>` : ""}${alternatives}<details class="diagnostics"><summary>Search details</summary><p>Depth ${analysis.depth} · ${analysis.nodes.toLocaleString()} nodes · ${Math.round(analysis.elapsedMs)} ms</p><p>Scores are estimates from Dark’s perspective.</p></details>`;
+	return `${controls}<div class="analysis-score"><strong>${advantage}</strong><span>${analysis.score > 0 ? "+" : ""}${(analysis.score / 100).toFixed(2)}</span></div><p class="analysis-line">${analysis.pv.length ? `Line: ${analysis.pv.slice(0, 6).map(notation).join(" → ")}` : "No continuation available."}</p>${analysis.move && (analysis.move.captures.length || analysis.move.promotion) ? `<p class="tactical-fact">${analysis.move.captures.length ? `Captures ${analysis.move.captures.length} ${analysis.move.captures.length === 1 ? "piece" : "pieces"}.` : ""}${analysis.move.promotion ? " Promotes to king." : ""}</p>` : ""}${alternatives}<details class="diagnostics"><summary>Search details</summary><p>Depth ${analysis.depth} · ${analysis.nodes.toLocaleString()} nodes · ${Math.round(analysis.elapsedMs)} ms</p><p>Scores are estimates from Dark’s perspective.</p></details>`;
 }
 function historyMarkup(match: Match): string {
 	const pairs: string[] = [];
@@ -507,14 +512,14 @@ function historyMarkup(match: Match): string {
 		pairs.push(
 			`<div class="move-row"><span>${Math.floor(i / 2) + 1}.</span>${[i, i + 1].map((index) => (match.history[index] ? `<button type="button" data-review="${index}" class="move-entry ${review === index || (review === null && index === match.history.length - 1) ? "current" : ""}" aria-label="Review turn ${index + 1}: ${notation(match.history[index].turn)}">${notation(match.history[index].turn)}</button>` : "<span></span>")).join("")}</div>`,
 		);
-	return `<div class="move-list" aria-label="Move history">${pairs.length ? pairs.join("") : '<div class="empty-moves"><span>Every good game starts<br>with a first move.</span></div>'}</div>`;
+	return `<div class="move-list" aria-label="Move history">${pairs.length ? pairs.join("") : '<div class="empty-moves">No moves yet.</div>'}</div>`;
 }
 function graphMarkup(match: Match): string {
 	const points = match.history.map((entry, i) => ({
 		x: 5 + (i * 290) / Math.max(1, match.history.length - 1),
 		y: 35 - (Math.max(-500, Math.min(500, entry.evaluation ?? 0)) / 500) * 27,
 	}));
-	return `<svg class="advantage-graph" viewBox="0 0 300 70" role="img" aria-label="Recorded estimated advantage by turn, positive values favor dark; unanalyzed turns shown at the center"><path d="M5 35H295" stroke="var(--line)" stroke-dasharray="3 3"/>${points.length ? `<polyline points="${points.map((p) => `${p.x},${p.y}`).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/>` : ""}<text x="5" y="12">Dark</text><text x="5" y="66">Ivory</text></svg>`;
+	return `<svg class="advantage-graph" viewBox="0 0 300 70" role="img" aria-label="Recorded estimated advantage by turn, positive values favor dark; unanalyzed turns shown at the center"><path d="M5 35H295" stroke="var(--line)" stroke-dasharray="3 3"/>${points.length ? `<polyline points="${points.map((p) => `${p.x},${p.y}`).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2"/>` : ""}<text x="5" y="12">Dark</text><text x="5" y="66">Light</text></svg>`;
 }
 function playMarkup(): string {
 	const match = active();
@@ -525,21 +530,32 @@ function playMarkup(): string {
 	const topSide = flipped ? "light" : "dark";
 	const bottomSide = opponent(topSide);
 	const legal = legalTurns();
-	return `<main class="play-page"><div class="play-heading"><div><span class="eyebrow">${exercise ? (exercise.type === "lesson" ? "THE LEARNING ROOM" : "DAILY PRACTICE, LASTING SKILL") : `${modeNames[match.config.mode].toUpperCase()} / ${match.config.mandatoryCapture ? "AMERICAN CHECKERS" : "OPTIONAL-CAPTURE HOUSE RULE"}`}</span><h1>${exercise ? "A little practice. A little progress." : "Make yourself at home."}</h1></div>${button(exercise ? "exit-exercise" : "new-game", exercise ? "Back to learning" : "New game", "button secondary small", exercise ? "book" : "grid")}</div><div class="game-layout"><section class="board-column" aria-label="Game board">${playerCard(topSide, match)}<div class="board-container ${match.clock.paused ? "is-paused" : ""}">${boardMarkup(boardForDisplay())}${match.clock.paused ? `<div class="pause-overlay">${icon("pause")}<h2>Game paused</h2><p>Come back with fresh eyes.</p>${button("pause", "Return to the board", "button primary", "play")}</div>` : ""}</div>${playerCard(bottomSide, match)}<div class="board-toolbar">${button("flip", "Flip board", "quiet-button", "flip")}${button("sound", preferences.sound ? "Sound on" : "Sound off", "quiet-button", "sound")}${!exercise && !match.outcome ? button("pause", match.clock.paused ? "Resume" : "Pause", "quiet-button", match.clock.paused ? "play" : "pause") : ""}<span class="keyboard-hint">${icon("grid")} Keyboard friendly</span></div><details class="accessible-moves"><summary>Play using a list of legal moves</summary><form id="legal-form"><label for="legal-select">Legal turn</label><select id="legal-select" name="turn" ${!canPlay() ? "disabled" : ""}>${legal.map((turn, i) => `<option value="${i}">${notation(turn)}${turn.captures.length ? ` · captures ${turn.captures.length}` : ""}${turn.promotion ? " · becomes king" : ""}</option>`).join("")}</select><button type="submit" class="button secondary small" ${!canPlay() ? "disabled" : ""}>Play turn</button></form><p>Arrow keys navigate the board. Enter or Space selects; Escape clears selection. Finish all jumps once a capture begins.</p></details></section><aside class="game-sidebar"><section class="status-card"><span class="eyebrow"><span class="turn-dot"></span>${exercise?.solved ? "LESSON IN THE BANK" : match.outcome ? "UNTIL NEXT TIME" : review !== null ? "REPLAY" : `${capital(match.state.turn).toUpperCase()} TO MOVE`}</span><h2>${status.title}</h2><p id="turn-detail">${esc(status.detail)}</p>${exercise?.message ? `<p class="exercise-message">${esc(exercise.message)}</p>` : ""}${exercise?.solved ? button("next-exercise", "Keep learning", "button primary", "arrow") : ""}${!canPlay() && !exercise && !match.outcome && !match.clock.paused && review === null ? `<div class="thinking-indicator"><span></span><span></span><span></span><small id="search-progress">Considering the possibilities</small></div>${button("play-now", "Play now", "button secondary small")}` : ""}${workerFailure ? button("retry-worker", "Retry computer opponent", "button secondary small") : ""}${match.outcome && !exercise ? `<div class="result-actions">${button("rematch", "One more game", "button primary", "arrow")}${button("export-json", "Save a copy", "button secondary", "download")}</div>` : ""}</section>${assistance && !exercise?.solved ? `<section class="coach-card"><div class="card-title"><span>${icon("spark")} A little perspective</span></div><div class="coach-actions">${button("hint", "Hint", "button secondary small", "spark", (!canPlay() && review === null) || (!canAnalyze() && !exercise) ? "disabled" : "")}${button("analyze", "Analyze", "button secondary small", "grid", !canAnalyze() ? "disabled" : "")}${button("undo", "Undo", "button secondary small", "undo", !canUndo(match) || !!exercise || review !== null ? "disabled" : "")}</div><div id="analysis-content">${analysisMarkup()}</div></section>` : ""}<section class="history-card"><div class="card-title"><span>Our moves</span><small>${match.history.length} turns</small></div>${historyMarkup(match)}<div class="replay-controls">${button("review-first", '<span class="sr-only">Starting position</span>↤', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}${button("review-prev", '<span class="sr-only">Previous turn</span>←', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}<span>${review === null ? "Live board" : review < 0 ? "Start" : `${review + 1} / ${match.history.length}`}</span>${button("review-next", '<span class="sr-only">Next turn</span>→', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}${button("review-live", '<span class="sr-only">Return to live board</span>⇥', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}</div>${assistance && match.history.length ? graphMarkup(match) : ""}${review !== null && assistance ? button("continue-position", "Practice from this position", "text-button", "arrow") : ""}</section>${!exercise ? `<div class="game-actions">${button("share-position", "Share position", "quiet-button", "share")}${button("export-pdn", "Export PDN", "quiet-button", "download")}${button("export-json", "Save JSON", "quiet-button", "download")}${!match.outcome ? `${button("resign", "Resign", "quiet-button", "flag")}${match.config.mode === "local" ? button("draw", "Agree to draw", "quiet-button") : ""}` : ""}</div>` : ""}<div class="club-note">${icon("book")}<p>Look twice. Move once.<br>Every square tells a story.</p></div></aside></div></main>`;
+	return `<main class="play-page"><div class="play-heading"><div><h1>${exercise ? capital(exercise.type) : modeNames[match.config.mode]}</h1>${!match.config.mandatoryCapture ? '<p class="match-rules">Optional captures</p>' : ""}</div>${button(exercise ? "exit-exercise" : "new-game", exercise ? "Back to learning" : "New game", "button secondary small", exercise ? "book" : "grid")}</div><div class="game-layout"><section class="board-column" aria-label="Game board">${playerCard(topSide, match)}<div class="board-container ${match.clock.paused ? "is-paused" : ""}">${boardMarkup(boardForDisplay())}${match.clock.paused ? `<div class="pause-overlay">${icon("pause")}<h2>Game paused</h2>${button("pause", "Resume", "button primary", "play")}</div>` : ""}</div>${playerCard(bottomSide, match)}<div class="board-toolbar">${button("flip", "Flip board", "quiet-button", "flip")}${button("sound", preferences.sound ? "Sound on" : "Sound off", "quiet-button", "sound")}${!exercise && !match.outcome ? button("pause", match.clock.paused ? "Resume" : "Pause", "quiet-button", match.clock.paused ? "play" : "pause") : ""}</div><details class="accessible-moves"><summary>Play using a list of legal moves</summary><form id="legal-form"><label for="legal-select">Legal turn</label><select id="legal-select" name="turn" ${!canPlay() ? "disabled" : ""}>${legal.map((turn, i) => `<option value="${i}">${notation(turn)}${turn.captures.length ? ` · captures ${turn.captures.length}` : ""}${turn.promotion ? " · becomes king" : ""}</option>`).join("")}</select><button type="submit" class="button secondary small" ${!canPlay() ? "disabled" : ""}>Play turn</button></form><p>Arrow keys navigate the board. Enter or Space selects; Escape clears selection. Finish all jumps once a capture begins.</p></details></section><aside class="game-sidebar"><section class="status-card"><h2>${status.title}</h2>${status.detail ? `<p id="turn-detail">${esc(status.detail)}</p>` : ""}${exercise?.message ? `<p class="exercise-message">${esc(exercise.message)}</p>` : ""}${exercise?.solved ? button("next-exercise", "Next", "button primary", "arrow") : ""}${!canPlay() && !exercise && !match.outcome && !match.clock.paused && review === null ? `<div class="thinking-indicator"><span></span><span></span><span></span><small id="search-progress">Searching…</small></div>${button("play-now", "Play now", "button secondary small")}` : ""}${workerFailure ? button("retry-worker", "Retry computer opponent", "button secondary small") : ""}${match.outcome && !exercise ? `<div class="result-actions">${button("rematch", "Rematch", "button primary", "arrow")}${button("export-json", "Save a copy", "button secondary", "download")}</div>` : ""}</section>${assistance && !exercise?.solved ? `<section class="coach-card"><div class="coach-actions">${button("hint", "Hint", "button secondary small", "spark", (!canPlay() && review === null) || (!canAnalyze() && !exercise) ? "disabled" : "")}${button("analyze", "Analyze", "button secondary small", "grid", !canAnalyze() ? "disabled" : "")}${button("undo", "Undo", "button secondary small", "undo", !canUndo(match) || !!exercise || review !== null ? "disabled" : "")}</div><div id="analysis-content">${analysisMarkup()}</div></section>` : ""}<section class="history-card"><div class="card-title"><span>Moves</span><small>${match.history.length} ${match.history.length === 1 ? "turn" : "turns"}</small></div>${historyMarkup(match)}<div class="replay-controls">${button("review-first", '<span class="sr-only">Starting position</span>↤', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}${button("review-prev", '<span class="sr-only">Previous turn</span>←', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}<span>${review === null ? "Live board" : review < 0 ? "Start" : `${review + 1} / ${match.history.length}`}</span>${button("review-next", '<span class="sr-only">Next turn</span>→', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}${button("review-live", '<span class="sr-only">Return to live board</span>⇥', "icon-button", undefined, !match.history.length || !!exercise ? "disabled" : "")}</div>${assistance && match.history.length ? graphMarkup(match) : ""}${review !== null && assistance ? button("continue-position", "Practice from this position", "text-button", "arrow") : ""}</section>${!exercise ? `<div class="game-actions">${button("share-position", "Share position", "quiet-button", "share")}${button("export-pdn", "Export PDN", "quiet-button", "download")}${button("export-json", "Save JSON", "quiet-button", "download")}${!match.outcome ? `${button("resign", "Resign", "quiet-button", "flag")}${match.config.mode === "local" ? button("draw", "Agree to draw", "quiet-button") : ""}` : ""}</div>` : ""}</aside></div></main>`;
 }
 
 function learnMarkup(): string {
-	return `<main class="collection-page"><div class="page-intro"><span class="eyebrow">THE LEARNING ROOM</span><h1>Good moves start<br>with <em>curiosity.</em></h1><p>Learn the essentials, spot the patterns, and make every game a little better than your last.</p></div><section><div class="section-heading"><div><span class="eyebrow">START WITH THE FOUNDATIONS</span><h2>Small lessons. Big possibilities.</h2></div><span class="count-label">${lessons.filter((item) => progress[item.id]).length} / ${lessons.length} completed</span></div><div class="lesson-grid">${lessons.map((item, index) => `<button class="lesson-card" data-lesson="${index}"><span class="lesson-number">${String(index + 1).padStart(2, "0")}${progress[item.id] ? icon("check") : icon("arrow")}</span><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><span class="text-link">${progress[item.id] ? "Practice again" : "Take the lesson"} ${icon("arrow")}</span></button>`).join("")}</div></section><section class="puzzle-section"><div class="section-heading"><div><span class="eyebrow">ONE POSITION. A FRESH CHALLENGE.</span><h2>Find your next good move.</h2></div><span class="count-label">${puzzles.filter((item) => progress[item.id]).length} / ${puzzles.length} solved</span></div><div class="puzzle-grid">${puzzles.map((item, index) => `<button class="puzzle-card" data-puzzle="${index}"><span class="puzzle-icon ${progress[item.id] ? "completed" : ""}">${icon(progress[item.id] ? "check" : item.category === "kings" ? "crown" : "spark")}</span><span><small>${esc(capital(item.category))} · ${esc(item.difficulty)}</small><strong>${esc(item.title)}</strong></span>${icon("chevron")}</button>`).join("")}</div></section></main>`;
+	return `<main class="collection-page"><div class="page-intro"><h1>Learn</h1></div>
+    <section><div class="section-heading"><h2>Lessons</h2><span class="count-label">${lessons.filter((item) => progress[item.id]).length} / ${lessons.length} completed</span></div>
+      <div class="lesson-grid">${lessons.map((item, index) => `<button class="lesson-card" data-lesson="${index}"><div class="lesson-heading"><span class="lesson-number">${index + 1}</span><h3>${esc(item.title)}</h3>${progress[item.id] ? '<span class="completion-label">Completed</span>' : ""}</div><p>${esc(item.description)}</p></button>`).join("")}</div>
+    </section>
+    <section class="puzzle-section"><div class="section-heading"><h2>Puzzles</h2><span class="count-label">${puzzles.filter((item) => progress[item.id]).length} / ${puzzles.length} solved</span></div>
+      <div class="puzzle-grid">${puzzles.map((item, index) => `<button class="puzzle-card" data-puzzle="${index}"><span><small>${esc(capital(item.category))} · ${esc(item.difficulty)}</small><strong>${esc(item.title)}</strong></span>${progress[item.id] ? '<span class="completion-label">Solved</span>' : icon("chevron")}</button>`).join("")}</div>
+    </section>
+  </main>`;
 }
 function libraryMarkup(): string {
-	return `<main class="collection-page"><div class="page-intro compact"><span class="eyebrow">YOUR GAME LIBRARY</span><h1>A record of <em>good games.</em></h1><p>Your games stay on this device. Revisit a moment, study a move, or take a copy with you.</p></div><div class="section-heading"><h2>At your leisure.</h2>${button("import", "Import a game", "button secondary", "download")}</div>${library.length ? `<div class="library-grid">${library.map((match) => `<article class="saved-game"><div class="saved-game-header"><span class="eyebrow">${modeNames[match.config.mode]}</span><span>${new Date(match.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><h3>${match.outcome ? (match.outcome.winner ? `${capital(match.outcome.winner)} takes the game` : "An honorable draw") : "A game in progress"}</h3><p>${match.history.length} turns · ${match.config.timeControl === "off" ? "Untimed" : match.config.timeControl} · ${match.config.mandatoryCapture ? "Standard rules" : "House rules"}</p><div>${button(`load:${match.id}`, match.outcome ? "Review game" : "Return to game", "button secondary small", "arrow")}${button(`delete:${match.id}`, "Delete", "text-button")}</div></article>`).join("")}</div>` : `<div class="empty-library">${icon("book")}<h2>Your story starts on the board.</h2><p>Play a game and we’ll keep it here for you.</p><a href="#home" class="button primary">Find a game ${icon("arrow")}</a></div>`}<input type="file" id="import-file" accept="application/json,.json" hidden></main>`;
+	return `<main class="collection-page"><div class="page-intro compact"><h1>Library</h1><p>Games saved on this device.</p></div><div class="section-heading"><h2>Saved games</h2>${button("import", "Import JSON", "button secondary", "download")}</div>
+    ${library.length ? `<div class="library-grid">${library.map((match) => `<article class="saved-game"><div class="saved-game-header"><span>${modeNames[match.config.mode]}</span><span>${new Date(match.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><h3>${match.outcome ? (match.outcome.winner ? `${capital(match.outcome.winner)} wins` : "Draw") : "In progress"}</h3><p>${match.history.length} ${match.history.length === 1 ? "turn" : "turns"} · ${match.config.timeControl === "off" ? "Untimed" : match.config.timeControl} · ${match.config.mandatoryCapture ? "Compulsory captures" : "Optional captures"}</p><div>${button(`load:${match.id}`, match.outcome ? "Review" : "Resume", "button secondary small")}${button(`delete:${match.id}`, "Delete", "text-button")}</div></article>`).join("")}</div>` : '<div class="empty-library"><p>No saved games.</p><a href="#home" class="button primary">New game</a></div>'}
+    <input type="file" id="import-file" accept="application/json,.json" hidden>
+  </main>`;
 }
+
 function editorMarkup(): string {
 	const count = editorBoard.filter(Boolean).length;
 	const state = createState(editorBoard, editorTurn, {
 		mandatoryCapture: editorRules,
 	});
-	return `<main class="play-page"><div class="play-heading"><div><span class="eyebrow">THE POSITION STUDIO</span><h1>Explore the <em>possibilities.</em></h1></div>${button("editor-clear", "Clear board", "button secondary small")}</div><div class="game-layout"><section><div class="editor-board" id="editor-board">${boardMarkup(editorBoard, false)}</div><p class="editor-help">Select a piece below, then select a dark square to place it. Choose the eraser to remove a piece.</p><div class="piece-palette" role="group" aria-label="Piece to place">${[1, 2, 3, 4, 0].map((piece) => `<button type="button" data-editor-piece="${piece}" class="palette-piece ${editorPiece === piece ? "active" : ""}" aria-pressed="${editorPiece === piece}" aria-label="${piece ? `${sideOf(piece)} ${isKing(piece) ? "king" : "man"}` : "Eraser"}">${piece ? pieceMarkup(piece) : icon("close")}</button>`).join("")}</div></section><aside class="game-sidebar"><section class="status-card"><span class="eyebrow">MAKE THE BOARD YOUR OWN</span><h2>Every position asks a question.</h2><p>Set up a puzzle, revisit a tricky ending, or see where your imagination takes you.</p><label class="field-label">SIDE TO MOVE<select id="editor-turn"><option value="dark" ${editorTurn === "dark" ? "selected" : ""}>Dark</option><option value="light" ${editorTurn === "light" ? "selected" : ""}>Ivory</option></select></label><label class="checkbox-label"><input type="checkbox" id="editor-rules" ${editorRules ? "checked" : ""}>Captures are compulsory</label><p class="muted">${count} pieces · ${getLegalTurns(state).length} legal turns</p><div class="stack-actions">${button("editor-practice", "Practice this position", "button primary", "arrow")}${button("editor-analyze", "Analyze this position", "button secondary", "spark")}${button("editor-share", "Share position", "button secondary", "share")}${button("editor-starting", "Use starting position", "text-button")}</div></section><div class="club-note">${icon("book")}<p>Dark moves toward squares 29–32.<br>Ivory moves toward squares 1–4.<br>Men on their final rank become kings.</p></div></aside></div></main>`;
+	return `<main class="play-page"><div class="play-heading"><div><h1>Position editor</h1></div>${button("editor-clear", "Clear board", "button secondary small")}</div><div class="game-layout"><section><div class="editor-board" id="editor-board">${boardMarkup(editorBoard, false)}</div><p class="editor-help">Select a piece below, then select a dark square to place it. Choose the eraser to remove a piece.</p><div class="piece-palette" role="group" aria-label="Piece to place">${[1, 2, 3, 4, 0].map((piece) => `<button type="button" data-editor-piece="${piece}" class="palette-piece ${editorPiece === piece ? "active" : ""}" aria-pressed="${editorPiece === piece}" aria-label="${piece ? `${sideOf(piece)} ${isKing(piece) ? "king" : "man"}` : "Eraser"}">${piece ? pieceMarkup(piece) : icon("close")}</button>`).join("")}</div></section><aside class="game-sidebar"><section class="status-card"><h2>Position</h2><label class="field-label">SIDE TO MOVE<select id="editor-turn"><option value="dark" ${editorTurn === "dark" ? "selected" : ""}>Dark</option><option value="light" ${editorTurn === "light" ? "selected" : ""}>Light</option></select></label><label class="checkbox-label"><input type="checkbox" id="editor-rules" ${editorRules ? "checked" : ""}>Captures are compulsory</label><p class="muted">${count} pieces · ${getLegalTurns(state).length} legal turns</p><div class="stack-actions">${button("editor-practice", "Practice this position", "button primary", "arrow")}${button("editor-analyze", "Analyze this position", "button secondary", "spark")}${button("editor-share", "Share position", "button secondary", "share")}${button("editor-starting", "Use starting position", "text-button")}</div></section><p class="editor-guidance">Dark moves toward squares 29–32; Light toward 1–4. Men reaching the last row become kings.</p></aside></div></main>`;
 }
 
 function render(): void {
@@ -548,7 +564,7 @@ function render(): void {
 		live && !live.outcome ? "true" : "false";
 	document.documentElement.dataset.appearance = preferences.appearance;
 	document.documentElement.dataset.palette = preferences.palette;
-	root.innerHTML = `${header()}${view === "home" ? homeMarkup() : view === "play" ? playMarkup() : view === "learn" ? learnMarkup() : view === "library" ? libraryMarkup() : editorMarkup()}${footer()}<dialog id="app-dialog" class="app-dialog" aria-labelledby="dialog-title"></dialog>`;
+	root.innerHTML = `${header()}${view === "home" ? homeMarkup() : view === "play" ? playMarkup() : view === "learn" ? learnMarkup() : view === "library" ? libraryMarkup() : editorMarkup()}<dialog id="app-dialog" class="app-dialog" aria-labelledby="dialog-title"></dialog>`;
 	if (view === "editor") wireEditor();
 	restoreFocus(focused);
 	if (view === "play" && active())
@@ -598,8 +614,8 @@ function showDialog(title: string, contents: string): HTMLDialogElement {
 }
 function preferencesDialog(): void {
 	showDialog(
-		"Make it yours.",
-		`<p class="muted">A comfortable place to think.</p><form id="preferences-form"><label class="field-label">APPEARANCE<select name="appearance">${["light", "dark", "contrast"].map((value) => `<option ${preferences.appearance === value ? "selected" : ""}>${value}</option>`).join("")}</select></label><label class="field-label">BOARD PALETTE<select name="palette">${paletteNames.map((value) => `<option value="${value}" ${preferences.palette === value ? "selected" : ""}>${capital(value)}</option>`).join("")}</select></label><label class="checkbox-label"><input type="checkbox" name="coordinates" ${preferences.coordinates ? "checked" : ""}>Show square numbers</label><label class="checkbox-label"><input type="checkbox" name="sound" ${preferences.sound ? "checked" : ""}>Original move sounds</label><label class="checkbox-label"><input type="checkbox" name="ponder" ${preferences.ponder ? "checked" : ""}>Let Expert think during your turn</label><p class="muted small">Pondering uses extra battery. It stops when the page is hidden or you pause.</p><button type="submit" class="button primary">Save preferences ${icon("check")}</button></form>`,
+		"Settings",
+		`<form id="preferences-form"><label class="field-label">APPEARANCE<select name="appearance">${["light", "dark", "contrast"].map((value) => `<option ${preferences.appearance === value ? "selected" : ""}>${value}</option>`).join("")}</select></label><label class="field-label">BOARD PALETTE<select name="palette">${paletteNames.map((value) => `<option value="${value}" ${preferences.palette === value ? "selected" : ""}>${capital(value)}</option>`).join("")}</select></label><label class="checkbox-label"><input type="checkbox" name="coordinates" ${preferences.coordinates ? "checked" : ""}>Show square numbers</label><label class="checkbox-label"><input type="checkbox" name="sound" ${preferences.sound ? "checked" : ""}>Move sounds</label><label class="checkbox-label"><input type="checkbox" name="ponder" ${preferences.ponder ? "checked" : ""}>Let Expert think during your turn</label><p class="muted small">Pondering uses extra battery. It stops when the page is hidden or you pause.</p><button type="submit" class="button primary">Save preferences ${icon("check")}</button></form>`,
 	);
 }
 function confirmDialog(
@@ -673,8 +689,7 @@ function playTurn(turn: Turn): void {
 				alternatives?.some((line) => sameTurn(line[0], turn))
 			)
 		) {
-			exercise.message =
-				"A legal move. Try the goal described above, and take another look.";
+			exercise.message = "Legal move, but it does not solve this exercise.";
 			match = { ...match, pending: null };
 			setMatch(match);
 			selected = null;
@@ -935,10 +950,8 @@ function resultDialog(): void {
 	if (!match?.outcome) return;
 	playSound("win", preferences.sound);
 	showDialog(
-		match.outcome.winner
-			? `${capital(match.outcome.winner)} wins.`
-			: "A well-played draw.",
-		`<div class="result-emblem">${icon("crown")}</div><p>${esc(outcomeText(match))}</p><p class="muted">${match.history.length} turns. A little more experience for the next game.</p><div class="dialog-actions">${button("close-dialog", "Review the game", "button secondary")}${button("rematch", "Play again", "button primary", "arrow")}</div>`,
+		match.outcome.winner ? `${capital(match.outcome.winner)} wins.` : "Draw",
+		`<div class="result-emblem">${icon("crown")}</div><p>${esc(gameStatus(match).detail)}</p><p class="muted">${match.history.length} ${match.history.length === 1 ? "turn" : "turns"}</p><div class="dialog-actions">${button("close-dialog", "Review the game", "button secondary")}${button("rematch", "Play again", "button primary", "arrow")}</div>`,
 	);
 }
 function startExercise(type: "lesson" | "puzzle", index: number): void {
@@ -981,7 +994,7 @@ async function share(state: GameState): Promise<void> {
 	const link = positionLink(state);
 	try {
 		await navigator.clipboard.writeText(link);
-		notify("Position link copied. Share a little challenge.");
+		notify("Position link copied.");
 	} catch {
 		showDialog(
 			"Share this position",
@@ -1167,10 +1180,7 @@ root.addEventListener("click", (event) => {
 		case "hint":
 			if (exercise) {
 				hintTurn = exercise.item.solution[exercise.step];
-				exercise.message =
-					"hint" in exercise.item
-						? exercise.item.hint
-						: exercise.item.instruction;
+				exercise.message = "";
 				render();
 			} else search("hint");
 			break;
@@ -1222,7 +1232,7 @@ root.addEventListener("click", (event) => {
 			break;
 		case "resign":
 			confirmDialog(
-				"Call it a game?",
+				"Resign?",
 				"Your opponent will win this game by resignation.",
 				"confirm-resign",
 				"Resign",
@@ -1247,7 +1257,7 @@ root.addEventListener("click", (event) => {
 			break;
 		case "draw":
 			confirmDialog(
-				"A draw, by agreement?",
+				"Agree to draw?",
 				"Both players must agree to end the game as a draw.",
 				"confirm-draw",
 				"Both players agree",
@@ -1265,7 +1275,7 @@ root.addEventListener("click", (event) => {
 			if (match)
 				download(
 					exportJSON(match),
-					`astra-${match.id}.json`,
+					`checkers-${match.id}.json`,
 					"application/json",
 				);
 			break;
@@ -1277,7 +1287,7 @@ root.addEventListener("click", (event) => {
 					);
 					break;
 				}
-				download(exportPDN(match), `astra-${match.id}.pdn`, "text/plain");
+				download(exportPDN(match), `checkers-${match.id}.pdn`, "text/plain");
 			}
 			break;
 		case "share-position":
@@ -1634,8 +1644,7 @@ window.addEventListener("astra:offline", () => {
 });
 window.addEventListener("astra:update-ready", () => {
 	updateAvailable = true;
-	if (!live || live.outcome)
-		notify("A fresh version is ready. Reload when you’re ready to update.");
+	if (!live || live.outcome) notify("Update available. Reload to update.");
 });
 setInterval(() => {
 	if (

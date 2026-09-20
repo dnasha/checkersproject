@@ -22,9 +22,7 @@ test("all appearances, light palettes and dialogs retain readable contrast", asy
 	await page.goto("./");
 	for (const appearance of ["light", "dark", "contrast"]) {
 		await page.locator('[data-action="preferences"]').click();
-		await expect(page.getByRole("dialog")).toHaveAccessibleName(
-			"Make it yours.",
-		);
+		await expect(page.getByRole("dialog")).toHaveAccessibleName("Settings");
 		await page.locator('[name="appearance"]').selectOption(appearance);
 		await page.locator('[name="palette"]').selectOption("beach");
 		await page.locator('[name="coordinates"]').check();
@@ -49,7 +47,7 @@ test("learning, editor, library and result are keyboard and screen-reader discov
 	await page.locator('[data-lesson="0"]').click();
 	await expect(page.locator(".square-number")).toHaveCount(32);
 	await accessible(page);
-	await page.getByRole("link", { name: "Studio", exact: true }).click();
+	await page.getByRole("link", { name: "Editor", exact: true }).click();
 	await accessible(page);
 	await page.getByRole("link", { name: "Library", exact: true }).click();
 	await accessible(page);

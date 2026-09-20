@@ -6,7 +6,7 @@ export const exportJSON = (match: Match): string =>
 export function importJSON(text: string): Match {
 	if (text.length > 5_000_000)
 		throw new Error(
-			"This file is too large. Choose an Astra game smaller than 5 MB.",
+			"Choose a game file smaller than 5 MB.",
 		);
 	let parsed: unknown;
 	try {
@@ -41,11 +41,11 @@ export function exportPDN(match: Match): string {
 			)
 			.join(",");
 	const headers = [
-		'[Event "Astra Checkers"]',
+		'[Event "Checkers"]',
 		'[GameType "21"]',
 		`[Date "${new Date(match.createdAt).toISOString().slice(0, 10).replaceAll("-", ".")}"]`,
-		`[Black "${match.config.mode === "local" || match.config.humanSide === "dark" ? "Player" : "Astra"}"]`,
-		`[White "${match.config.mode === "local" || match.config.humanSide === "light" ? "Player" : "Astra"}"]`,
+		`[Black "${match.config.mode === "local" || match.config.humanSide === "dark" ? "Player" : "Computer"}"]`,
+		`[White "${match.config.mode === "local" || match.config.humanSide === "light" ? "Player" : "Computer"}"]`,
 		`[Result "${result}"]`,
 		'[SetUp "1"]',
 		`[FEN "${match.initial.turn === "dark" ? "B" : "W"}:W${pieces("light")}:B${pieces("dark")}"]`,

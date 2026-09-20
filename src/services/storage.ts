@@ -92,7 +92,7 @@ function database(): Promise<IDBDatabase> {
 					"Browser storage is unavailable. Export your game to keep a copy.",
 				);
 			request.onblocked = () =>
-				fail("Close another Astra tab to update local storage.");
+				fail("Close another Checkers tab to update local storage.");
 		}).catch((error) => {
 			// This also covers a synchronous SecurityError from indexedDB.open().
 			dbPromise = undefined;
