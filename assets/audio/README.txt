@@ -1,1 +1,0 @@
-Credit to chess.com for the sounds. Go play chess.com

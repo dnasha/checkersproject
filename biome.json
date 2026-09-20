@@ -1,9 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": false
-    }
-  }
+	"$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": false,
+			"correctness": {
+				"noUnreachable": "error",
+				"noDuplicateArgumentNames": "error",
+				"noInvalidUseBeforeDeclaration": "error",
+				"noConstAssign": "error",
+				"noSelfAssign": "error"
+			},
+			"suspicious": {
+				"noDoubleEquals": "error",
+				"noDebugger": "error",
+				"noDuplicateCase": "error"
+			}
+		}
+	}
 }

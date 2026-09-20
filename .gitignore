@@ -1,7 +1,7 @@
 # Node modules
 node_modules/
 
-# Lock files (optional, but bun.lock should be committed or ignored based on preference. We keep bun.lock tracked since it's standard for packages, but let's ignore local system logs/caches)
+# Legacy hosting configuration
 .replit
 replit.nix
 
@@ -18,3 +18,7 @@ lerna-debug.log*
 
 # Biome / tool caches
 .biome/
+dist/
+playwright-report/
+test-results/
+.vite/

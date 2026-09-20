@@ -1,0 +1,220 @@
+{
+	"measuredAt": "2026-09-20T02:34:54.595Z",
+	"hardware": {
+		"cpu": "13th Gen Intel(R) Core(TM) i7-13620H",
+		"logicalCpus": 16,
+		"os": "win32 10.0.26200",
+		"node": "v25.2.1"
+	},
+	"method": "Paired colors from ten seeded 4-to-12-ply openings. Both engines use the same per-move wall-clock budget and legal complete-turn engine. Legacy uses the original source/AI.js heuristic and alpha-beta, plus iterative deepening for equal time and corrected terminal rules. Astra uses no pondering or opening/endgame data in this benchmark. Small sample; not an Elo estimate.",
+	"budgetMs": 100,
+	"pairs": 10,
+	"plyCap": 120,
+	"reference": {
+		"agreed": 8,
+		"tested": 8,
+		"depth": 3,
+		"quiescence": false
+	},
+	"tacticalResults": [
+		{
+			"name": "Dark double capture",
+			"passed": true,
+			"depth": 1,
+			"nodes": 2
+		},
+		{
+			"name": "Light double capture",
+			"passed": true,
+			"depth": 1,
+			"nodes": 2
+		},
+		{
+			"name": "Capture and crown",
+			"passed": true,
+			"depth": 1,
+			"nodes": 2
+		},
+		{
+			"name": "King backward capture",
+			"passed": true,
+			"depth": 1,
+			"nodes": 2
+		}
+	],
+	"games": [
+		{
+			"pair": 1,
+			"openingPlies": 4,
+			"astraSide": "dark",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 1,
+			"openingPlies": 4,
+			"astraSide": "light",
+			"result": "win",
+			"reason": "capture",
+			"plies": 102
+		},
+		{
+			"pair": 2,
+			"openingPlies": 6,
+			"astraSide": "dark",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 2,
+			"openingPlies": 6,
+			"astraSide": "light",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 3,
+			"openingPlies": 8,
+			"astraSide": "dark",
+			"result": "win",
+			"reason": "capture",
+			"plies": 37
+		},
+		{
+			"pair": 3,
+			"openingPlies": 8,
+			"astraSide": "light",
+			"result": "win",
+			"reason": "capture",
+			"plies": 116
+		},
+		{
+			"pair": 4,
+			"openingPlies": 10,
+			"astraSide": "dark",
+			"result": "win",
+			"reason": "capture",
+			"plies": 79
+		},
+		{
+			"pair": 4,
+			"openingPlies": 10,
+			"astraSide": "light",
+			"result": "win",
+			"reason": "capture",
+			"plies": 116
+		},
+		{
+			"pair": 5,
+			"openingPlies": 12,
+			"astraSide": "dark",
+			"result": "win",
+			"reason": "capture",
+			"plies": 33
+		},
+		{
+			"pair": 5,
+			"openingPlies": 12,
+			"astraSide": "light",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 6,
+			"openingPlies": 4,
+			"astraSide": "dark",
+			"result": "win",
+			"reason": "capture",
+			"plies": 69
+		},
+		{
+			"pair": 6,
+			"openingPlies": 4,
+			"astraSide": "light",
+			"result": "draw",
+			"reason": "repetition",
+			"plies": 107
+		},
+		{
+			"pair": 7,
+			"openingPlies": 6,
+			"astraSide": "dark",
+			"result": "win",
+			"reason": "capture",
+			"plies": 119
+		},
+		{
+			"pair": 7,
+			"openingPlies": 6,
+			"astraSide": "light",
+			"result": "win",
+			"reason": "capture",
+			"plies": 36
+		},
+		{
+			"pair": 8,
+			"openingPlies": 8,
+			"astraSide": "dark",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 8,
+			"openingPlies": 8,
+			"astraSide": "light",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 9,
+			"openingPlies": 10,
+			"astraSide": "dark",
+			"result": "win",
+			"reason": "capture",
+			"plies": 39
+		},
+		{
+			"pair": 9,
+			"openingPlies": 10,
+			"astraSide": "light",
+			"result": "loss",
+			"reason": "capture",
+			"plies": 59
+		},
+		{
+			"pair": 10,
+			"openingPlies": 12,
+			"astraSide": "dark",
+			"result": "unresolved",
+			"reason": "benchmark-ply-cap",
+			"plies": 120
+		},
+		{
+			"pair": 10,
+			"openingPlies": 12,
+			"astraSide": "light",
+			"result": "win",
+			"reason": "capture",
+			"plies": 108
+		}
+	],
+	"totals": {
+		"wins": 11,
+		"draws": 1,
+		"losses": 1,
+		"unresolved": 7
+	},
+	"search": {
+		"totalNodes": 2779163,
+		"totalSearchMs": 93663,
+		"nodesPerSecond": 29672,
+		"maximumSearchMs": 118,
+		"cacheBytes": 5242880
+	}
+}

@@ -1,45 +1,68 @@
-# Checkers Game
+# Astra Checkers
 
-> [!NOTE]
-> This is a legacy checkers project originally built on Replit. The original Replit-based implementation can be found on the `og-version` branch. This `main` branch features a 2026 refresh completed with the help of AI to resolve strict-mode ReferenceErrors, PieceTracker crashes, and AI double-jump freezes, getting it running cleanly on GitHub Pages.
+A little checkers club, entirely in your browser. A new edition of Dan Sharan's original game, built with TypeScript, HTML and CSS. It runs on GitHub Pages, works offline after preparation, and never needs an account, backend or API key.
 
-A fully-featured, classic Checkers (Draughts) game developed by Dan Sharan. This web application runs completely client-side in the browser and supports both 2-player local pass-and-play and single-player matches against a Minimax-based AI.
+## Play
 
-## Features
+Choose Practice, Challenge or two-player Local play before starting. Practice includes hints and takebacks; Challenge keeps assistance out of the live match. Pick either side, four AI levels, standard American/English rules or optional captures, and untimed, 3+3, 5+3 or 10+5 clocks.
 
-- **Local pass-and-play (2 Players)**: Play Checkers against a friend on the same screen.
-- **VS AI Mode (1 Player)**: Challenge a built-in computer opponent powered by the **MiniMax algorithm with Alpha-Beta pruning**.
-- **Forced Jumps Option**: Optional enforcement of the classic Checkers rule where a player must capture an opponent's piece if a jump is available.
-- **Time Controls**: Interactive clocks for both players with a Fischer-style time increment (adds 3 seconds to the active player's clock after every move).
-- **Captured Piece Trackers**: Visual indicators tracking the number of captured pieces next to the timers.
-- **Classic Sound Effects**: Immersive sounds for game start, moving, capturing, and winning.
-- **Highly Customizable Visuals**:
-  - **Styles**: Dark Mode, Light Mode, and default classic wood style.
-  - **Themes**:
-    - Default (Classic Wood)
-    - Classic (Dark/Red)
-    - Ice (Dark Blue/Light Blue)
-    - Beach (Blue/Sand)
-    - Forest (Dark Green/Light Green)
-    - Pink (Pink/Light Pink)
-    - Ukraine (Blue/Yellow)
+- Responsive, keyboard-accessible board with a text move selector, drag/tap input, explicit king symbols and high-contrast appearance.
+- Background AI with pondering, iterative search, cancellation and Play now. Untimed Expert thinks for up to ten seconds; lower levels move sooner.
+- Six interactive lessons, 24 original puzzles, a position editor, replay and on-demand analysis.
+- Local game library, automatic resume, JSON import/export, standard-game PDN export and shareable position links.
+- Original synthesized sounds, named board palettes, offline installation and controlled updates.
 
-## Technical Architecture
+The app automatically adjudicates threefold repetition and 80 completed turns with neither a capture nor an uncrowned-man move. A capture chain counts as one turn. Dark moves first, and crowning ends the turn. Optional captures are a house rule; once started, a capture sequence must finish.
 
-The project is built using a modular ES module structure:
-- **`game.js`**: The heart of the application, connecting the UI, event listeners, piece movement logic, and turn timer loops.
-- **`AI.js`**: Implements the MiniMax engine, heuristic evaluation, and alpha-beta pruning search tree.
-- **`fPos.js`**: Defines the physical representation of a game position used by the AI engine.
-- **`vPos.js`**: Manages visual layouts and coordinates of checkerboard tiles and pieces.
-- **`checker.js`**: The checker piece class representing individual checkers, colors, kings, and life status.
-- **`move.js`**: Tracks starting coordinates, destination coordinates, and move types (simple vs capture).
-- **`checkerSound.js`**: Handles audio playback for various in-game sound effects.
-- **`pieceTracker.js`**: Manages the captured piece visual queue.
-- **`lodash.js`**: Utilized for deep-cloning game states in the AI search tree.
+## Run and check
 
-## Setup & How to Run
+Use Node.js 22.12+ or 24 LTS and npm. Build tooling is only needed for development; visitors receive static files.
 
-1. Clone or download this repository.
-2. Open `index.html` in any modern web browser to view the homepage.
-3. Click "Play Checkers" to navigate to `game.html` and begin playing!
-4. Since the project utilizes ES modules (`type="module"`), you will need to serve it via a local static web server to avoid browser CORS errors (e.g., run `bunx http-server` or `python -m http.server` from the root directory).
+```sh
+npm ci
+npm start
+```
+
+```sh
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npx playwright install chromium
+npm run test:e2e
+```
+
+`npm run preview` serves the production build. `node scripts/serve-preview.mjs` serves it at `http://127.0.0.1:4173/checkersproject/`, the repository-subpath configuration used by browser tests. Open through HTTP(S); opening a compiled file directly with `file://` is not supported.
+
+See [validation results and remaining device checks](docs/VALIDATION.md) for measured coverage and release limitations.
+
+## Publish to GitHub Pages
+
+Build output is in `dist/`; both `index.html` and the older `game.html` link work. Set the repository's Pages source to **GitHub Actions**. Publication requires an explicit `astra-v*` release tag, or a manual run of **Publish Astra to Pages**. Ordinary pushes to `astra-ver` do not publish it. No server routes or special response headers are required.
+
+To publish from `astra-ver` while preserving `main`, commit and push the tested branch, allow the intended release tag in **Settings → Environments → github-pages → Deployment branches and tags**, then create and push a new release tag:
+
+```sh
+git switch astra-ver
+git push origin astra-ver
+git tag -a astra-v2.0.1 -m "Release Astra Checkers 2.0.1"
+git push origin astra-v2.0.1
+```
+
+Use a new tag name for each release. The workflow rebuilds, tests, and deploys the tagged commit. The **Run workflow** button becomes available once this workflow file also exists on the repository's default branch; GitHub requires that for manual dispatch. Release-tag deployment works directly from `astra-ver`.
+
+The service worker prepares offline assets after first loading the production build. Wait for the offline-ready indication before disconnecting. A newer version waits for explicit acceptance; it does not interrupt a running game.
+
+## Data and controls
+
+Everything stays on the device. Preferences use localStorage; matches and learning progress use IndexedDB. Export games before clearing browser data. Storage failures leave play available in memory. Timed games keep consuming time when hidden or closed; use Pause before stepping away. Changing the device clock can affect elapsed time across browser sessions, so these local clocks are not intended as anti-cheat tournament clocks.
+
+Keyboard: Tab to enter or leave the board, arrows to explore, Enter/Space to select and move, Escape to cancel selection. Multi-jumps must complete with the same piece. The legal-move dropdown is an equivalent non-spatial way to play.
+
+## Engine and measurements
+
+`npm run benchmark` runs deterministic tactical checks, shallow reference-search comparisons, and paired games against a corrected implementation of the legacy evaluation and plain alpha-beta search. The generated `scripts/benchmark-results.json` records budgets, hardware, results and unresolved games. This is a reproducible comparison, not an Elo estimate or a claim of perfect play.
+
+`npm run generate:knowledge` rebuilds the original opening/endgame guidance. Runtime knowledge files are shipped with the app; they require no external downloads. Finite-depth guidance is not treated as a proven result. See [engine measurements](docs/ENGINE.md) for results, hardware and knowledge coverage, and [architecture](docs/ARCHITECTURE.md) for rules, persistence and search details.
+
+The pre-rebuild code remains available in Git history at `50b6935`; the much earlier project is on `og-version`. Original authorship and the MIT license are preserved.
